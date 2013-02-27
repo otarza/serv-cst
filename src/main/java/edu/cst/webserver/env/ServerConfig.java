@@ -11,14 +11,11 @@ import java.util.Set;
  * @author Demur
  */
 public class ServerConfig{
-
     private static final ServerConfig CONFIG_INSTANCE;
     private Properties properties;
-    private String SupportedMethods;
-    private String SupportedMimeTypes;
-    private String SupportedHttpFilters;
-    private String[] methodTokens;
-    private String[] mimeTokens;
+    private String supportedMethods;
+    private String supportedMimeTypes;
+    private String supportedHttpFilters;
     private Set<String> methods;
     private Set<String> mimes;
 
@@ -46,22 +43,25 @@ public class ServerConfig{
     }
 
     private void init() {
-        this.SupportedMethods = properties.getProperty("http.methods");
-        this.SupportedMimeTypes = properties.getProperty("mime.types");
-        this.SupportedHttpFilters = properties.getProperty("http.filters");
+        this.supportedMethods = properties.getProperty("http.methods");
+        this.supportedMimeTypes = properties.getProperty("mime.types");
+        this.supportedHttpFilters = properties.getProperty("http.filters");
+
+        String[] methodTokens = supportedMethods.split("\\s*,\\s*");
+        methods = new HashSet<String>();
+        Collections.addAll(methods, methodTokens);
+
+        String[] mimeTokens = supportedMimeTypes.split("\\s*,\\s*");
+        mimes = new HashSet<String>();
+        Collections.addAll(mimes, mimeTokens);
+
     }
 
     public boolean isSupportedMethod(String method){
-        methodTokens = SupportedMethods.split(",");
-        methods = new HashSet<String>();
-        Collections.addAll(methods, methodTokens);
         return methods.contains(method);
     }
 
     public boolean isSupportedMimeType(String mime){
-        mimeTokens = SupportedMimeTypes.split(",");
-        mimes = new HashSet<String>();
-        Collections.addAll(mimes, mimeTokens);
         return mimes.contains(mime);
     }
 
