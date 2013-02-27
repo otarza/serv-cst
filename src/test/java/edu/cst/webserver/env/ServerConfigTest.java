@@ -12,15 +12,15 @@ public class ServerConfigTest {
 
     @Test
     public void testSupportedMethod(){
-        Assert.assertEquals(true,config.isSupportedMethod("GET"));
-        Assert.assertEquals(true,config.isSupportedMethod("HEAD"));
-        Assert.assertEquals(false,config.isSupportedMethod("POST"));
+        Assert.assertTrue(config.isSupportedMethod("GET"));
+        Assert.assertTrue(config.isSupportedMethod("HEAD"));
+        Assert.assertFalse(config.isSupportedMethod("POST"));
     }
     @Test
     public void testSupportedMimeTypes(){
-        Assert.assertEquals(true,config.isSupportedMimeType("image/jpeg"));
-        Assert.assertEquals(true,config.isSupportedMimeType("text/html"));
-        Assert.assertEquals(true,config.isSupportedMimeType("text/plain"));
-        Assert.assertEquals(false,config.isSupportedMimeType("image/jpg"));
+        Assert.assertTrue(config.isSupportedMimeType("image/jpeg"));
+        Assert.assertTrue(config.isSupportedMimeType("text/html"));
+        Assert.assertTrue(config.isSupportedMimeType("text/plain"));
+        Assert.assertTrue(config.isSupportedMimeType("image/jpg"));
     }
 }
