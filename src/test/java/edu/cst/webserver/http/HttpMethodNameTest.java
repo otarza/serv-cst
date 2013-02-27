@@ -1,12 +1,13 @@
 package edu.cst.webserver.http;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Demur
  */
 public class HttpMethodNameTest {
-    @org.junit.Test
+    @Test
     public void testGetMethodName() {
         Assert.assertEquals("GET", HttpMethod.GET);
     }
