@@ -1,0 +1,14 @@
+.idea
+.idea/*
+*.iml
+*/*.iml
+.DS_Store
+*/target
+target/
+.settings
+.classpath
+.project
+.externalToolBuilders
+*.orig
+.gwt
+.bat
