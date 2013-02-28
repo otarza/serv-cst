@@ -19,7 +19,12 @@ public class QueryString {
      *
      */
     public static Map<String, String> getUrlParams(String queryString) {
+
+
         Map<String, String> queryStringMap = new HashMap<String, String>();
+
+        //splitting sting with "#". only first part of string, before "#" is interesting.
+        queryString = queryString.split("#")[0];
 
         for (String pairString : queryString.split("&")) {
             String pairSplitted[] = pairString.split("=");
