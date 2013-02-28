@@ -1,4 +1,4 @@
-package edu.cst.webserver.http;
+package edu.cst.webserver.uri;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +18,7 @@ import java.util.Map;
 public class QueryStringTest {
 
     @Test
-    public void testGetUrlParams() {
+    public void parse() {
         Map<String, String> m = new HashMap<String, String>();
 
         m.put("param1", "value1");
@@ -26,6 +26,15 @@ public class QueryStringTest {
         m.put("pa ram3", "value3");
 
         Assert.assertEquals(m, QueryString.getUrlParams("param1=value1&param2=val%20ue&pa%20ram3=value3"));
+
+        m = new HashMap<String, String>();
+
+        m.put("param1", "10%");
+        m.put("param2", "5%");
+        m.put("param3", "17%");
+
+
+        Assert.assertEquals(m, QueryString.getUrlParams("param1=10%25&param2=5%25&param3=17%25"));
     }
 
 }
