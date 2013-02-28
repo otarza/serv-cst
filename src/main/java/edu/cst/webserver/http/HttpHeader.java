@@ -33,12 +33,14 @@ public class HttpHeader {
     public static final String CONTENT_RANGE = "Content-Range";
     public static final String CONTENT_SCRIPT_TYPE = "Content-Script-Type";
     public static final String CONTENT_STYLE_TYPE = "Content-Style-Type";
+    public static final String CONTENT_TYPE = "Content-type";
     public static final String CONTENT_VERSION = "Content-Version";
     public static final String COOKIE = "Cookie";
     public static final String COOKIE2 = "Cookie2";
     public static final String DASL = "DASL";
     public static final String DAV  = "DAV";
     public static final String DATE = "Date";
+    public static final String DEFAULT_STYLE ="Default-Style";
     public static final String DELTA_BASE = "Delta-Base";
     public static final String DEPTH = "Depth";
     public static final String DERIVED_FROM = "Derived-From";
