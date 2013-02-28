@@ -33,7 +33,7 @@ public class HttpHeader {
     public static final String CONTENT_RANGE = "Content-Range";
     public static final String CONTENT_SCRIPT_TYPE = "Content-Script-Type";
     public static final String CONTENT_STYLE_TYPE = "Content-Style-Type";
-    public static final String CONTENT_TYPE = "Content-type";
+    public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_VERSION = "Content-Version";
     public static final String COOKIE = "Cookie";
     public static final String COOKIE2 = "Cookie2";
