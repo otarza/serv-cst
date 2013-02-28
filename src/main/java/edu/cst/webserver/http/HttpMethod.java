@@ -48,13 +48,11 @@ public class HttpMethod {
         GET(METHOD_GET, false, true),
         HEAD(METHOD_HEAD, false, false),
         POST(METHOD_POST, true, false),
-        PUT(METHOD_PUT, false, false), //???
+        PUT(METHOD_PUT, true, false),
         DELETE(METHOD_DELETE, false, false),
         CONNECT(METHOD_CONNECT, false, false),
-        OPTIONS(METHOD_OPTIONS, false, false),
-        TRACE(METHOD_TRACE, false, false);
-
-
+        OPTIONS(METHOD_OPTIONS, true, false),
+        TRACE(METHOD_TRACE, false, true);
 
         private String methodName;
         private boolean requestBodyAllowed;
@@ -63,7 +61,7 @@ public class HttpMethod {
         private Type(String methodName, boolean requestBodyAllowed, boolean responseBodyAllowed) {
             this.methodName = methodName;
             this.requestBodyAllowed = requestBodyAllowed;
-            this.requestBodyAllowed = responseBodyAllowed;
+            this.responseBodyAllowed = responseBodyAllowed;
         }
 
         public String getMethodName() {
