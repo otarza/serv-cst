@@ -52,7 +52,7 @@ public class HttpMethodNameTest {
 
         Assert.assertEquals("POST", methodPost.getMethodName());
         Assert.assertTrue(methodPost.isRequestBodyAllowed());
-        Assert.assertFalse(methodPost.isResponseBodyAllowed());
+        Assert.assertTrue(methodPost.isResponseBodyAllowed());
     }
 
     /**
@@ -66,7 +66,7 @@ public class HttpMethodNameTest {
 
         Assert.assertEquals("PUT", methodPut.getMethodName());
         Assert.assertTrue(methodPut.isRequestBodyAllowed());
-        Assert.assertFalse(methodPut.isResponseBodyAllowed());
+        Assert.assertTrue(methodPut.isResponseBodyAllowed());
     }
 
     /**

@@ -47,8 +47,8 @@ public class HttpMethod {
     public static enum Type {
         GET(METHOD_GET, false, true),
         HEAD(METHOD_HEAD, false, false),
-        POST(METHOD_POST, true, false),
-        PUT(METHOD_PUT, true, false),
+        POST(METHOD_POST, true, true),
+        PUT(METHOD_PUT, true, true),
         DELETE(METHOD_DELETE, false, false),
         CONNECT(METHOD_CONNECT, false, false),
         OPTIONS(METHOD_OPTIONS, true, false),
