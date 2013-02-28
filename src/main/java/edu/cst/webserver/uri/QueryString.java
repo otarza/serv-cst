@@ -29,11 +29,13 @@ public class QueryString {
                 key = URLDecoder.decode(pairSplitted[0], "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                // TODO replace with logger [OZ]
             }
             try {
                 value = URLDecoder.decode(pairSplitted[1], "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
+                // TODO replace with logger [OZ]
             }
             if (!key.isEmpty()) {
                 queryStringMap.put(key, value);
