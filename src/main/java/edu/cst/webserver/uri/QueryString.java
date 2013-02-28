@@ -18,7 +18,7 @@ public class QueryString {
      * String queryString is http query string
      *
      */
-    public static Map<String, String> getUrlParams(String queryString) {
+    public static Map<String, String> parse(String queryString) {
 
 
         Map<String, String> queryStringMap = new HashMap<String, String>();
