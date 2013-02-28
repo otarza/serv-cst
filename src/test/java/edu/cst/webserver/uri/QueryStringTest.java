@@ -18,23 +18,46 @@ import java.util.Map;
 public class QueryStringTest {
 
     @Test
-    public void parse() {
+    //Testing whitespace
+    public void testWhiteSpaceParse() {
         Map<String, String> m = new HashMap<String, String>();
-
         m.put("param1", "value1");
         m.put("param2", "val ue");
         m.put("pa ram3", "value3");
+        Assert.assertEquals(m, QueryString.parse("param1=value1&param2=val%20ue&pa%20ram3=value3"));
+    }
 
-        Assert.assertEquals(m, QueryString.getUrlParams("param1=value1&param2=val%20ue&pa%20ram3=value3"));
-
-        m = new HashMap<String, String>();
-
+    @Test
+    //Testing percentage sign
+    public void testPercentageSignParse() {
+        Map<String, String> m = new HashMap<String, String>();
         m.put("param1", "10%");
         m.put("param2", "5%");
         m.put("param3", "17%");
+        Assert.assertEquals(m, QueryString.parse("param1=10%25&param2=5%25&param3=17%25"));
+    }
+
+    @Test
+    //Testing  UTF-8
+    public void testUTF8Parse() {
+        Map<String, String> m = new HashMap<String, String>();
+
+        m.put("მისალმება", "გამარჯობა");
+        m.put("param2", "ორი");
+        m.put("param3", "თხუტმეტი");
 
 
-        Assert.assertEquals(m, QueryString.getUrlParams("param1=10%25&param2=5%25&param3=17%25"));
+        Assert.assertEquals(m, QueryString.parse("%E1%83%9B%E1%83%98%E1%83%A1%E1%83%90%E1%83%9A%E1%83%9B%E1%83%94%E1%83%91%E1%83%90=%E1%83%92%E1%83%90%E1%83%9B%E1%83%90%E1%83%A0%E1%83%AF%E1%83%9D%E1%83%91%E1%83%90&param2=%E1%83%9D%E1%83%A0%E1%83%98&param3=%E1%83%97%E1%83%AE%E1%83%A3%E1%83%A2%E1%83%9B%E1%83%94%E1%83%A2%E1%83%98"));
+    }
+
+    @Test
+    //Testing  "#" sign. everything after "#" sign is not interesting at all.
+    public void testHashParse() {
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("param1", "value1");
+        m.put("param2", "val ue");
+        m.put("pa ram3", "value3");
+        Assert.assertEquals(m, QueryString.parse("param1=value1&param2=val%20ue&pa%20ram3=value3#hello"));
     }
 
 }

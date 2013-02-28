@@ -21,6 +21,6 @@ public class ServerConfigTest {
         Assert.assertTrue(config.isSupportedMimeType("image/jpeg"));
         Assert.assertTrue(config.isSupportedMimeType("text/html"));
         Assert.assertTrue(config.isSupportedMimeType("text/plain"));
-        Assert.assertTrue(config.isSupportedMimeType("image/jpg"));
+        Assert.assertFalse(config.isSupportedMimeType("image/jpg"));
     }
 }
