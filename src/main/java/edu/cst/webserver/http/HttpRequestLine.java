@@ -2,7 +2,7 @@ package edu.cst.webserver.http;
 
 /**
  * Created with IntelliJ IDEA.
- * User: user
+ * User: Rezo
  * Date: 3/1/13
  * Time: 12:26 AM
  * To change this template use File | Settings | File Templates.
@@ -46,7 +46,6 @@ public class HttpRequestLine {
     public void setQueryString(String queryString) {
         this.queryString = queryString;
     }
-
     public String getFragment() {
         return fragment;
     }

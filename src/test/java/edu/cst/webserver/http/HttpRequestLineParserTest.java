@@ -6,7 +6,7 @@ import org.junit.Test;
 
 /**
  * Created with IntelliJ IDEA.
- * User: user
+ * User: Rezo
  * Date: 3/1/13
  * Time: 2:31 AM
  * To change this template use File | Settings | File Templates.
