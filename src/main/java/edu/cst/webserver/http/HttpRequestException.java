@@ -1,20 +1,19 @@
 package edu.cst.webserver.http;
 
 public class HttpRequestException extends Exception {
-    private HttpStatus.Code httpStatusCode;
+    private HttpStatus.Code statusCode;
 
     public HttpRequestException(HttpStatus.Code statusCode, String message) {
         super(message);
-        this.httpStatusCode = statusCode;
+        this.statusCode = statusCode;
     }
 
     public HttpRequestException(HttpStatus.Code statusCode) {
-        this.httpStatusCode = statusCode;
+        this.statusCode = statusCode;
     }
 
     public HttpStatus.Code getStatusCode() {
-        return this.httpStatusCode;
-
+        return this.statusCode;
     }
 
 }
