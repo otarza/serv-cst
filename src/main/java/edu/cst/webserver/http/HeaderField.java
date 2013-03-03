@@ -11,7 +11,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class HeaderField {
-    public static Map<String, String> parse(String headerField) {
+    public static Map<String, String> parse(String headerField) throws HttpRequestException {
         Map<String, String> splittedField = new HashMap<String, String>();
 
         //boolean match = headerField.matches("\\w+:\\s*\\w+\\s*");
@@ -25,8 +25,7 @@ public class HeaderField {
             System.out.println(value);
             splittedField.put(key, value);
         } else {
-            //TO DO throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST)
-            System.out.println("EXCEPTION BAD_REQUEST !!!!!!!!!!!!!!!!!!!!!!!!!!");
+            throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
         }
         return splittedField;
     }
