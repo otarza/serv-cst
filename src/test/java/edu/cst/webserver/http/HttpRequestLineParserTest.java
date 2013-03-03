@@ -14,15 +14,19 @@ import org.junit.Test;
 public class HttpRequestLineParserTest{
     private static final String HTTP_VERSION = "HTTP/1.1";
     @Test
-    public void testRequestLine0() {
+    public void requestLine0() throws HttpRequestException {
         HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
         String requestLineString;
         requestLineString = "GET /test HTTP/1.1\\r\\n";
         HttpRequestLine requestLine = parser.parse(requestLineString);
 
         Assert Assert = null;
-        Assert.assertEquals(HttpMethod.METHOD_GET, requestLine.getMethodName());
+        Assert.assertEquals(HttpMethod.METHOD_GET, requestLine.getMethodByName());
         Assert.assertEquals("/test", requestLine.getPath());
         Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
 }
+    @Test
+    public void requestLine1() throws HttpRequestException{
+
+    }
 }

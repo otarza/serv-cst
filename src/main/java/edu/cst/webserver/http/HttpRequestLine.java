@@ -62,7 +62,8 @@ public class HttpRequestLine {
         this.httpVersion = httpVersion;
     }
 
-    public HttpMethod.Type getMethodName() {
+    public HttpMethod.Type getMethodByName() {
         return getMethod();
     }
+
 }

@@ -23,4 +23,13 @@ public class ServerConfigTest {
         Assert.assertTrue(config.isSupportedMimeType("text/plain"));
         Assert.assertFalse(config.isSupportedMimeType("image/jpg"));
     }
+    @Test
+    public void testSupportedHttpVersionAllowed(){
+        Assert.assertEquals(true, config.isSupportedHttpVersion("HTTP/1.1"));
+    }
+    @Test
+    public void testisSupportedHttpVersionNotAllowed(){
+        Assert.assertEquals(false, config.isSupportedHttpVersion("HTTP/1.1"));
+    }
+
 }

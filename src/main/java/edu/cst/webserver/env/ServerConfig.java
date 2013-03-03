@@ -18,6 +18,7 @@ public class ServerConfig{
     private String supportedHttpFilters;
     private Set<String> methods;
     private Set<String> mimes;
+    private Set<String> https;
 
     private ServerConfig(){
         properties = new Properties();
@@ -55,6 +56,10 @@ public class ServerConfig{
         mimes = new HashSet<String>();
         Collections.addAll(mimes, mimeTokens);
 
+        String[] httpTokens = supportedHttpFilters.split("\\s*,\\s*");
+        https = new HashSet<String>();
+        Collections.addAll(https, httpTokens);
+
     }
 
     public boolean isSupportedMethod(String method){
@@ -63,6 +68,9 @@ public class ServerConfig{
 
     public boolean isSupportedMimeType(String mime){
         return mimes.contains(mime);
+    }
+    public boolean isSupportedHttpVersion(String httpVersion){
+        return https.contains(httpVersion);
     }
 
 }
