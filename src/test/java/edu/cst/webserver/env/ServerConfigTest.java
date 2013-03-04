@@ -14,7 +14,8 @@ public class ServerConfigTest {
     public void testSupportedMethod(){
         Assert.assertTrue(config.isSupportedMethod("GET"));
         Assert.assertTrue(config.isSupportedMethod("HEAD"));
-        Assert.assertFalse(config.isSupportedMethod("POST"));
+        Assert.assertTrue(config.isSupportedMethod("POST"));
+        Assert.assertTrue(config.isSupportedMethod("CONNECT"));
     }
     @Test
     public void testSupportedMimeTypes(){
