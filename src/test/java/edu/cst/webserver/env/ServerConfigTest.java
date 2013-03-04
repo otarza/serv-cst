@@ -23,13 +23,16 @@ public class ServerConfigTest {
         Assert.assertTrue(config.isSupportedMimeType("text/plain"));
         Assert.assertFalse(config.isSupportedMimeType("image/jpg"));
     }
+
+    /**
+     * @author Rezo
+     */
     @Test
     public void testSupportedHttpVersionAllowed(){
-        Assert.assertEquals(true, config.isSupportedHttpVersion("HTTP/1.1"));
+        Assert.assertTrue(config.isSupportedHttpVersion("HTTP/1.1"));
     }
     @Test
     public void testisSupportedHttpVersionNotAllowed(){
-        Assert.assertEquals(false, config.isSupportedHttpVersion("HTTP/1.1"));
+        Assert.assertFalse(config.isSupportedHttpVersion("HTTP/1.0"));
     }
-
 }

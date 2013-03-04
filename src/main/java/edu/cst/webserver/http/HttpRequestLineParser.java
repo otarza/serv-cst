@@ -27,10 +27,8 @@ public class HttpRequestLineParser{
     }
 
     public HttpRequestLine parse(String requestLineString) throws HttpRequestException {
+        parts = requestLineString.trim().split("\\s+");
 
-        requestLineString = requestLineString.replaceAll("^(\\s+)", "");
-        requestLineString = requestLineString.replaceAll("\\s+$", "");
-        parts = requestLineString.split("\\s+");
         //Check for the correct number of request parts
         if (parts.length != 3){
             throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
@@ -38,26 +36,26 @@ public class HttpRequestLineParser{
         //HTTP Method Check and Uppercase
         ServerConfig config = ServerConfig.getInstance();
         String methodName = parts[0];
-        methodName.toUpperCase();
+        methodName = methodName.toUpperCase();
             if(!config.isSupportedMethod(methodName)){
                 throw new HttpRequestException(HttpStatus.Code.METHOD_NOT_ALLOWED);
             }
         //Http Request Version Check
         String httpVersion = parts[2];
+        httpVersion = httpVersion.substring(0,8);
         requestUri = parts[1];
         if (!config.isSupportedHttpVersion(httpVersion)) {
             throw new HttpRequestException(HttpStatus.Code.HTPP_VERSION_NOT_SUPPORTED);
             }else if(requestUri.contains("?") && requestUri.contains("#")){
-   /*URI parse*/    pathString = requestUri.substring(1,requestUri.indexOf("?")-1);
+   /*URI parse*/    pathString = requestUri.substring(0,requestUri.indexOf("?"));
                     queryString  = requestUri.substring(requestUri.indexOf("?"),
-                        requestUri.indexOf("#")-1);
+                        requestUri.indexOf("#"));
                     fragmentString = requestUri.substring(requestUri.indexOf("#"));
             }else if(requestUri.contains("?")){
-                    pathString = requestUri.substring(1,requestUri.indexOf("?")-1);
-                    queryString  = requestUri.substring(requestUri.indexOf("?"),
-                        requestUri.indexOf("#")-1);
-            }else {
-                    queryString  = requestUri.substring(1);
+                    pathString = requestUri.substring(0,requestUri.indexOf("?"));
+                    queryString  = requestUri.substring(requestUri.indexOf("?"));
+            }else{
+                    pathString  = requestUri.substring(0);
             }
     HttpRequestLine requestLine = new HttpRequestLine();
         requestLine.setMethod(HttpMethod.getMethodByName(methodName));
