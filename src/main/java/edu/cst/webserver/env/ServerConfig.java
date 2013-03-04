@@ -1,5 +1,7 @@
 package edu.cst.webserver.env;
 
+import com.sun.deploy.net.HttpRequest;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collections;
