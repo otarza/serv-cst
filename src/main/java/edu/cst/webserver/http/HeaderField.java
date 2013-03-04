@@ -10,7 +10,7 @@ import java.util.Map;
  * Time: 12:54 PM
  * To change this template use File | Settings | File Templates.
  */
-public class HeaderField {
+public class HeaderField {   /*added throws HttpRequestException*/
     public static Map<String, String> parse(String headerField) throws HttpRequestException {
         Map<String, String> splittedField = new HashMap<String, String>();
 

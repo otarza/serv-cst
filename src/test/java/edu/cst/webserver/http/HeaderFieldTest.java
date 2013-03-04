@@ -16,7 +16,7 @@ import java.util.Map;
 public class HeaderFieldTest {
 
     @Test
-    public void parseTest() {
+    public void parseTest() throws HttpRequestException {
         Map<String, String> fieldsMap = new HashMap<String, String>();
 
         fieldsMap.put("Accept-Language", "en-us,en;q=0.5");

@@ -15,7 +15,7 @@ public class ServerConfig{
     private Properties properties;
     private String supportedMethods;
     private String supportedMimeTypes;
-    private String supportedHttpFilters;
+    private String supportedHttpVersion;
     private Set<String> methods;
     private Set<String> mimes;
     private Set<String> https;
@@ -46,7 +46,7 @@ public class ServerConfig{
     private void init() {
         this.supportedMethods = properties.getProperty("http.methods");
         this.supportedMimeTypes = properties.getProperty("mime.types");
-        this.supportedHttpFilters = properties.getProperty("http.filters");
+        this.supportedHttpVersion = properties.getProperty("http.version");
 
         String[] methodTokens = supportedMethods.split("\\s*,\\s*");
         methods = new HashSet<String>();
@@ -56,10 +56,9 @@ public class ServerConfig{
         mimes = new HashSet<String>();
         Collections.addAll(mimes, mimeTokens);
 
-        String[] httpTokens = supportedHttpFilters.split("\\s*,\\s*");
+        String[] httpTokens = supportedHttpVersion.split("\\s*,\\s*");
         https = new HashSet<String>();
         Collections.addAll(https, httpTokens);
-
     }
 
     public boolean isSupportedMethod(String method){
@@ -69,8 +68,12 @@ public class ServerConfig{
     public boolean isSupportedMimeType(String mime){
         return mimes.contains(mime);
     }
+
+    /**
+     * @author Rezo
+     * @param httpVersion
+     */
     public boolean isSupportedHttpVersion(String httpVersion){
         return https.contains(httpVersion);
     }
-
 }
