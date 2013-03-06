@@ -17,9 +17,7 @@ public class HeaderFieldTest {
 
     @Test(expected = HttpRequestException.class)
     public void parseInvalidHeaderFieldTest() throws HttpRequestException {
-        Map<String, String> fieldsMap = new HashMap<String, String>();
-        fieldsMap.put("Accept-Language", "en-us,en;q=0.5");
-        Assert.assertEquals(fieldsMap, HeaderField.parse(" Accept-Language:    en-us,en;q=0.5 "));
+        HeaderField.parse(" Accept-Language :    en-us,en;q=0.5 ");
     }
 
     @Test
