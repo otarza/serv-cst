@@ -15,9 +15,9 @@ import edu.cst.webserver.env.ServerConfig;
 public class HttpRequestLineParser{
     private String requestUri;
     private String parts[];
-    private String queryString;
-    private String pathString;
-    private String fragmentString;
+    private String queryString="";
+    private String pathString ="";
+    private String fragmentString = "";
 
     public static HttpRequestLineParser newInstance(){
         return new HttpRequestLineParser();
@@ -66,6 +66,7 @@ public class HttpRequestLineParser{
         requestLine.setPath(pathString);
         requestLine.setQueryString(queryString);
         requestLine.setFragment(fragmentString);
+        requestLine.setRequestUri(requestLineString);
 
         return requestLine;
     }

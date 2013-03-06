@@ -1,312 +1,229 @@
 package edu.cst.webserver.http;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+
 
 /**
- * Created with IntelliJ IDEA.
- * User: Rezo
- * Date: 3/1/13
- * Time: 2:31 AM
- * To change this template use File | Settings | File Templates.
+ * @author revazi
  */
+@RunWith(Parameterized.class)
 public class HttpRequestLineParserTest{
     private static final String HTTP_VERSION = "HTTP/1.1";
 
-    @Test
-    public void requestLine0() throws HttpRequestException {
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString = "GET /test HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
+    private String requestLineString;
+    private String expectedMethod;
+    private String expectedPath;
+    private String expectedQueryString;
+    private String expectedFragment;
+    private String expectedHttpVersion;
 
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/test", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
+    public HttpRequestLineParserTest(
+                               String requestLineString,
+                               String expectedMethod,
+                               String expectedPath,
+                               String expectedQueryString,
+                               String expectedFragment,
+                               String expectedHttpVersion){
+        this.requestLineString = requestLineString;
+        this.expectedMethod = expectedMethod;
+        this.expectedPath = expectedPath;
+        this.expectedQueryString = expectedQueryString;
+        this.expectedFragment = expectedFragment;
+        this.expectedHttpVersion = expectedHttpVersion;
+    }
+
+    @Parameters
+    public static Collection getRequestLineData(){
+        return Arrays.asList(new Object[][]{
+                {
+                        "GET /path/to/resource HTTP/1.1", // Request line to parse
+                        HttpMethod.METHOD_GET,            // Expected HTTP method
+                        "/path/to/resource",              // Expected Path
+                        "",                               // Expected Query String
+                        "",                               // Expected Fragment
+                        HTTP_VERSION                      // Expected HTTP version
+
+                },
+                {
+                        "GET /path/to/resource?param=value HTTP/1.1",
+                        HttpMethod.METHOD_GET,
+                        "/path/to/resource",
+                        "?param=value",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /favicon.ico HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/favicon.ico",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /dumbfuck HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/dumbfuck",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /forums/1/topics/2375?page=1#posts-17408 HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/forums/1/topics/2375",
+                        "?page=1",
+                        "#posts-17408",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /get_no_headers_no_body/world HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/get_no_headers_no_body/world",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /get_one_header_no_body HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/get_one_header_no_body",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /get_funky_content_length_body_hello HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/get_funky_content_length_body_hello",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "POST /post_identity_body_world?q=search#hey HTTP/1.1\r\n",
+                        HttpMethod.METHOD_POST,
+                        "/post_identity_body_world",
+                        "?q=search",
+                        "#hey",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /get_one_header_no_body HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/get_one_header_no_body",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "POST /post_chunked_all_your_base HTTP/1.1\r\n",
+                        HttpMethod.METHOD_POST,
+                        "/post_chunked_all_your_base",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "POST /two_chunks_mult_zero_end HTTP/1.1\r\n",
+                        HttpMethod.METHOD_POST,
+                        "/two_chunks_mult_zero_end",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "POST /chunked_w_trailing_headers HTTP/1.1\r\n",
+                        HttpMethod.METHOD_POST,
+                        "/chunked_w_trailing_headers",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "POST /chunked_w_bullshit_after_length HTTP/1.1\r\n",
+                        HttpMethod.METHOD_POST,
+                        "/chunked_w_bullshit_after_length",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /with_\"stupid\"_quotes?foo=\"bar\" HTTP/1.1\r\n\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/with_\"stupid\"_quotes",
+                        "?foo=\"bar\"",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /test.cgi?foo=bar?baz HTTP/1.1\r\n\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/test.cgi",
+                        "?foo=bar?baz",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "\r\nGET /test HTTP/1.1\r\n\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/test",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "CONNECT 0-home0.netscape.com:443 HTTP/1.1\r\n",
+                        HttpMethod.METHOD_CONNECT,
+                        "0-home0.netscape.com:443",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET / HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "CONNECT HOME0.NETSCAPE.COM:443 HTTP/1.1\r\n",
+                        HttpMethod.METHOD_CONNECT,
+                        "HOME0.NETSCAPE.COM:443",
+                        "",
+                        "",
+                        HTTP_VERSION
+                },
+                {
+                        "GET /δ¶/δt/pope?q=1#narf HTTP/1.1\r\n",
+                        HttpMethod.METHOD_GET,
+                        "/δ¶/δt/pope",
+                        "?q=1",
+                        "#narf",
+                        HTTP_VERSION
+                }
+        });
     }
 
     @Test
-    public void requestLine2() throws HttpRequestException{
+    public void testHttpRequestLine() throws HttpRequestException {
         HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString = "GET /favicon.ico HTTP/1.1\r\n";
         HttpRequestLine requestLine = parser.parse(requestLineString);
 
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/favicon.ico", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine3() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /dumbfuck HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/dumbfuck", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine4() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /forums/1/topics/2375?page=1#posts-17408 HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/forums/1/topics/2375", requestLine.getPath());
-        Assert.assertEquals("?page=1", requestLine.getQueryString());
-        Assert.assertEquals("#posts-17408",requestLine.getFragment());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine5() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /get_no_headers_no_body/world HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/get_no_headers_no_body/world", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine6() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /get_one_header_no_body HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/get_one_header_no_body", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine7() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /get_funky_content_length_body_hello HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/get_funky_content_length_body_hello", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine8() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "POST /post_identity_body_world?q=search#hey HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_POST, requestLine.getMethod());
-        Assert.assertEquals("/post_identity_body_world", requestLine.getPath());
-        Assert.assertEquals("?q=search", requestLine.getQueryString());
-        Assert.assertEquals("#hey",requestLine.getFragment());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine9() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "POST /post_chunked_all_your_base HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_POST, requestLine.getMethod());
-        Assert.assertEquals("/post_chunked_all_your_base", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine10() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "POST /two_chunks_mult_zero_end HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_POST, requestLine.getMethod());
-        Assert.assertEquals("/two_chunks_mult_zero_end", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine11() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "POST /chunked_w_trailing_headers HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_POST, requestLine.getMethod());
-        Assert.assertEquals("/chunked_w_trailing_headers", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine12() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "POST /chunked_w_bullshit_after_length HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_POST, requestLine.getMethod());
-        Assert.assertEquals("/chunked_w_bullshit_after_length", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine13() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /with_\\\"stupid\\\"_quotes?foo=\\\"bar\\\" HTTP/1.1\r\n\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/with_\\\"stupid\\\"_quotes", requestLine.getPath());
-        Assert.assertEquals("?foo=\\\"bar\\\"",requestLine.getQueryString());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine14() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /test.cgi?foo=bar?baz HTTP/1.1\r\n\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/test.cgi", requestLine.getPath());
-        Assert.assertEquals("?foo=bar?baz",requestLine.getQueryString());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine15() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "\r\nGET /test HTTP/1.1\r\n\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/test", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine16() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "CONNECT 0-home0.netscape.com:443 HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_CONNECT, requestLine.getMethod());
-        //System.out.println(requestLine.getMethod());
-        Assert.assertEquals("0-home0.netscape.com:443", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine17() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "POST /test HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_POST, requestLine.getMethod());
-        Assert.assertEquals("/test", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine18() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "POST * HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_POST, requestLine.getMethod());
-        Assert.assertEquals("*", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine19() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET / HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine20() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /file.txt HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/file.txt", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine21() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "CONNECT HOME0.NETSCAPE.COM:443 HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_CONNECT, requestLine.getMethod());
-        Assert.assertEquals("HOME0.NETSCAPE.COM:443", requestLine.getPath());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
-    }
-
-    @Test
-    public void requestLine22() throws HttpRequestException{
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        String requestLineString;
-        requestLineString = "GET /δ¶/δt/pope?q=1#narf HTTP/1.1\r\n";
-        HttpRequestLine requestLine = parser.parse(requestLineString);
-
-        Assert Assert = null;
-        Assert.assertEquals(HttpMethod.TYPE_GET, requestLine.getMethod());
-        Assert.assertEquals("/δ¶/δt/pope", requestLine.getPath());
-        Assert.assertEquals("?q=1", requestLine.getQueryString());
-        Assert.assertEquals("#narf", requestLine.getFragment());
-        Assert.assertEquals(HTTP_VERSION, requestLine.getHttpVersion());
+        Assert.assertEquals(this.requestLineString, requestLine.getRequestUri());
+        Assert.assertEquals(this.expectedMethod, requestLine.getMethod().getMethodName());
+        Assert.assertEquals(this.expectedPath, requestLine.getPath());
+        Assert.assertEquals(this.expectedQueryString,requestLine.getQueryString());
+        Assert.assertEquals(this.expectedFragment,requestLine.getFragment());
+        Assert.assertEquals(this.expectedHttpVersion, requestLine.getHttpVersion());
     }
 }
-
-
-//        "GET /δ¶/δt/pope?q=1#narf HTTP/1.1\r\n"
-//        "CONNECT home_0.netscape.com:443 HTTP/1.0\r\n"
