@@ -1,6 +1,7 @@
 package edu.cst.webserver.http;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Demur
@@ -55,4 +56,20 @@ public interface HttpResponse {
      * Immediately flushes underlying OutputStream
      */
     public void flush() throws IOException;
+
+    /**
+     *
+     */
+    public HttpStatus.Code getStatusCode();
+
+    /**
+     *
+     */
+    public Map<String, String> getHeaders();
+
+    /**
+     *
+     */
+    public String getMessageBody();
+
 }

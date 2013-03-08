@@ -1,29 +1,34 @@
 package edu.cst.webserver.http;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Demur
  */
 
-interface HttpResponseErrorHandler {
-    public void handle(HttpStatus.Code statusCode, HttpResponse response) throws HttpRequestException;
-    public void handle(HttpStatus.Code statusCode, HttpResponse response, String body) throws HttpRequestException;
-}
 
 public class HttpResponseWrapper implements HttpResponse {
 
-    HttpStatus.Code statusCode;
-    HttpStatus statusName;
+    private HttpStatus.Code statusCode;
     private Map<String,String> headers;
     private String  messageBody;
-
+    private StringBuilder writeLine;
     private HttpResponseErrorHandler errorHandler;
+
 
     public HttpResponseWrapper() {
         headers = new HashMap<String, String>();
+        writeLine = new StringBuilder();
+    }
+
+    public String getWriteLine() {
+        return writeLine.toString();
     }
 
     public String getMessageBody(){
@@ -49,9 +54,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public void setStatus(HttpStatus.Code status) {
-        if(this.statusCode == null){
-            this.statusCode = status;
-        }
+        this.statusCode = status;
     }
 
     @Override
@@ -62,29 +65,29 @@ public class HttpResponseWrapper implements HttpResponse {
     @Override
     public void redirect(String location, HttpStatus.Code redirectStatus) {
         this.headers.put(HttpHeader.LOCATION, location);
-        if(this.statusCode == null){
-            this.statusCode = redirectStatus;
-        }
+        this.statusCode = redirectStatus;
     }
 
     @Override
     public void error(HttpStatus.Code errorStatus) throws HttpRequestException {
-        errorHandler.handle(errorStatus, this);
+        this.statusCode = errorStatus;
+        errorHandler.handle(this);
     }
 
     @Override
     public void error(HttpStatus.Code errorStatus, String body) throws HttpRequestException {
         this.messageBody = body;
-        errorHandler.handle(errorStatus, this, messageBody);
+        this.statusCode = errorStatus;
+        errorHandler.handle(this);
     }
 
     @Override
     public void write(String content) throws IOException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        writeLine.append(content);
     }
 
     @Override
     public void flush() throws IOException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //todo [DN]
     }
 }
