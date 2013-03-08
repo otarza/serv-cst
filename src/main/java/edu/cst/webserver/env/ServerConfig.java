@@ -17,7 +17,7 @@ public class ServerConfig{
     private Set<String> mimes;
     private Set<String> https;
     private Set<String> defaultFiles;
-    private String allowListing;
+    private boolean allowListing;
 
     private ServerConfig(){
         properties = new Properties();
@@ -46,7 +46,7 @@ public class ServerConfig{
         methods = commaSeparatedStringToSet(properties.getProperty("http.methods"));
         mimes = commaSeparatedStringToSet(properties.getProperty("mime.types"));
         https = commaSeparatedStringToSet(properties.getProperty("http.version"));
-        allowListing = properties.getProperty("directory.allowListing").trim();
+        allowListing = Boolean.valueOf(properties.getProperty("directory.allowListing"));
         defaultFiles = commaSeparatedStringToSet(properties.getProperty("directory.defaultFiles"));
     }
 
@@ -66,7 +66,7 @@ public class ServerConfig{
     }
 
     public boolean isDirListingAllowed(){
-        return Boolean.valueOf(allowListing);
+        return allowListing;
     }
 
     public boolean isWelcomeFile(String file){
