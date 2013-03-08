@@ -34,13 +34,14 @@ public class ServerConfigTest {
     public void testWelcomeFile(){
         Assert.assertTrue(config.isWelcomeFile("index.html"));
         Assert.assertTrue(config.isWelcomeFile("index.htm"));
+        Assert.assertTrue(config.isWelcomeFile("index.xhtml"));
     }
 
     @Test
     public void testIsNotWelcomeFile(){
         Assert.assertFalse(config.isWelcomeFile("index.php"));
         Assert.assertFalse(config.isWelcomeFile("index.jsp"));
-        Assert.assertFalse(config.isWelcomeFile("index.xhtml"));
+        Assert.assertFalse(config.isWelcomeFile("main.html"));
     }
 
     /**
