@@ -24,8 +24,7 @@ public class HttpResponseTest {
 
         Assert.assertEquals(headers,res.getHeaders());
         Assert.assertEquals(HttpStatus.Code.OK,res.getStatusCode());
-        Assert.assertNull(res.getMessageBody());
-        Assert.assertEquals("test",res.getWriteLine());
+        Assert.assertNull("test",res.getMessageBody());
     }
 
 }

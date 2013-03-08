@@ -1,11 +1,7 @@
 package edu.cst.webserver.http;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,22 +13,17 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private HttpStatus.Code statusCode;
     private Map<String,String> headers;
-    private String  messageBody;
-    private StringBuilder writeLine;
+    private StringBuilder messageBody;
     private HttpResponseErrorHandler errorHandler;
 
 
     public HttpResponseWrapper() {
         headers = new HashMap<String, String>();
-        writeLine = new StringBuilder();
-    }
-
-    public String getWriteLine() {
-        return writeLine.toString();
+        messageBody = new StringBuilder();
     }
 
     public String getMessageBody(){
-        return this.messageBody;
+        return messageBody.toString();
     }
 
     public Map<String, String> getHeaders(){
@@ -76,14 +67,14 @@ public class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public void error(HttpStatus.Code errorStatus, String body) throws HttpRequestException {
-        this.messageBody = body;
+        this.messageBody.append(body);
         this.statusCode = errorStatus;
         errorHandler.handle(this);
     }
 
     @Override
-    public void write(String content) throws IOException {
-        writeLine.append(content);
+    public void write(String content){
+        messageBody.append(content);
     }
 
     @Override
