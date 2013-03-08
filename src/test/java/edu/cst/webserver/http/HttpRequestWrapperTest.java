@@ -29,23 +29,23 @@ public class HttpRequestWrapperTest {
 
         String requestLineString = "POST /path/to/resource?param1=value1&param2=value2 HTTP/1.1";
         HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        HttpRequest response = null;
+        HttpRequest request = null;
         try {
             HttpRequestLine requestLine = parser.parse(requestLineString);
-            response = new HttpRequestWrapper(requestLine,headers,body);
+            request = new HttpRequestWrapper(requestLine,headers,body);
         } catch (HttpRequestException e) {
             e.printStackTrace();
         }
 
-        Assert.assertEquals(HttpMethod.Type.POST, response.getRequestMethod());
-        Assert.assertTrue(ServerConfig.getInstance().isSupportedHttpVersion(response.getHttpVersion()));
-        Assert.assertEquals("/path/to/resource",response.getPath());
-        Assert.assertEquals("text/html",response.getContentType());
-        Assert.assertEquals(headers,response.getAllHeaders());
+        Assert.assertEquals(HttpMethod.Type.POST, request.getRequestMethod());
+        Assert.assertTrue(ServerConfig.getInstance().isSupportedHttpVersion(request.getHttpVersion()));
+        Assert.assertEquals("/path/to/resource", request.getPath());
+        Assert.assertEquals("text/html",request.getContentType());
+        Assert.assertEquals(headers, request.getAllHeaders());
         Map<String, String> m = new HashMap<String, String>();
         m.put("?param1", "value1");
         m.put("param2", "value2");
-        Assert.assertEquals(m,response.getParams());
+        Assert.assertEquals(m, request.getParams());
     }
 
 
