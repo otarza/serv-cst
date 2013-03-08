@@ -46,7 +46,7 @@ public class ServerConfig{
         methods = commaSeparatedStringToSet(properties.getProperty("http.methods"));
         mimes = commaSeparatedStringToSet(properties.getProperty("mime.types"));
         https = commaSeparatedStringToSet(properties.getProperty("http.version"));
-        allowListing = properties.getProperty("directory.allowListing");
+        allowListing = properties.getProperty("directory.allowListing").trim();
         defaultFiles = commaSeparatedStringToSet(properties.getProperty("directory.defaultFiles"));
     }
 
@@ -66,7 +66,7 @@ public class ServerConfig{
     }
 
     public boolean isDirListingAllowed(){
-        return allowListing.equals("true") ? true : false;
+        return Boolean.valueOf(allowListing);
     }
 
     public boolean isWelcomeFile(String file){
