@@ -13,7 +13,7 @@ public class MimeTypeDetectorTest {
     @Test
     public void testMimeTypeIsImagePNG() throws IOException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/img.png").getPath();
-        String mimeType = String.valueOf(MimeTypeDetector.detectMimeType(path).getDetectedMimeType());
+        String mimeType = MimeTypeDetector.detectMimeType(path).getDetectedMimeType();
         Assert.assertEquals("image/png", mimeType);
     }
 

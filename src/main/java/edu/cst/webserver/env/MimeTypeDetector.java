@@ -24,6 +24,9 @@ public class MimeTypeDetector {
                 URL url = new URL("file", "", file.getPath());
                 URLConnection conn = url.openConnection();
                 mime = conn.getContentType();
+
+
+
                 if(mime.equals("unknown")){
                     //TODO return application/octet-stream  [DN]
                 }
