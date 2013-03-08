@@ -2,7 +2,6 @@ package edu.cst.webserver.http;
 
 import edu.cst.webserver.uri.QueryString;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,15 +13,15 @@ import java.util.Map;
  */
 public class HttpRequestWrapper implements HttpRequest{
 
-    private HttpRequestLine request;
-    private String requestbody;
+    private HttpRequestLine requestLine;
+    private String requestBody;
     Map<String, String> headers;
 
 
-    public HttpRequestWrapper(HttpRequestLine requestLine, Map<String, String> headers, String requestbody){
-        this.request = requestLine;
+    public HttpRequestWrapper(HttpRequestLine requestLine, Map<String, String> headers, String requestBody){
+        this.requestLine = requestLine;
         this.headers = headers;
-        this.requestbody = requestbody;
+        this.requestBody = requestBody;
 
     }
 
@@ -30,22 +29,22 @@ public class HttpRequestWrapper implements HttpRequest{
 
     @Override
     public HttpMethod.Type getRequestMethod(){
-        return request.getMethod();
+        return requestLine.getMethod();
     }
 
     @Override
     public HttpRequestLine getHttpRequestLine() {
-        return request;
+        return requestLine;
     }
 
     @Override
     public String getRequestURI() {
-        return request.getRequestUri();
+        return requestLine.getRequestUri();
     }
 
     @Override
     public String getHttpVersion() {
-        return request.getHttpVersion();
+        return requestLine.getHttpVersion();
     }
 
     @Override
@@ -66,11 +65,11 @@ public class HttpRequestWrapper implements HttpRequest{
     @Override
     public Map<String, String> getParams() {
 
-       return QueryString.parse(request.getQueryString()) ;
+       return QueryString.parse(requestLine.getQueryString()) ;
     }
 
     @Override
     public String getPath() {
-        return request.getPath();
+        return requestLine.getPath();
     }
 }
