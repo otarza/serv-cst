@@ -36,14 +36,14 @@ public interface HttpResponse {
      * Sends error response with specified error code
      * @param errorStatus
      */
-    public void error(HttpStatus.Code errorStatus);
+    public void error(HttpStatus.Code errorStatus) throws HttpRequestException;
 
     /**
      * * Sends error response with specified error code and specific body
      * @param errorStatus
      * @param body
      */
-    public void error(HttpStatus.Code errorStatus, String body);
+    public void error(HttpStatus.Code errorStatus, String body) throws HttpRequestException;
 
     /**
      * Writes passed content to underlying OutputStream
