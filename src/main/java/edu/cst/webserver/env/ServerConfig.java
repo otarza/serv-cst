@@ -13,12 +13,11 @@ import java.util.Set;
 public class ServerConfig{
     private static final ServerConfig CONFIG_INSTANCE;
     private Properties properties;
-    private String supportedMethods;
-    private String supportedMimeTypes;
-    private String supportedHttpVersion;
     private Set<String> methods;
     private Set<String> mimes;
     private Set<String> https;
+    private Set<String> defaultFiles;
+    private String allowListing;
 
     private ServerConfig(){
         properties = new Properties();
@@ -44,21 +43,18 @@ public class ServerConfig{
     }
 
     private void init() {
-        this.supportedMethods = properties.getProperty("http.methods");
-        this.supportedMimeTypes = properties.getProperty("mime.types");
-        this.supportedHttpVersion = properties.getProperty("http.version");
+        methods = commaSeparatedStringToSet(properties.getProperty("http.methods"));
+        mimes = commaSeparatedStringToSet(properties.getProperty("mime.types"));
+        https = commaSeparatedStringToSet(properties.getProperty("http.version"));
+        allowListing = properties.getProperty("directory.allowListing");
+        defaultFiles = commaSeparatedStringToSet(properties.getProperty("directory.defaultFiles"));
+    }
 
-        String[] methodTokens = supportedMethods.split("\\s*,\\s*");
-        methods = new HashSet<String>();
-        Collections.addAll(methods, methodTokens);
-
-        String[] mimeTokens = supportedMimeTypes.split("\\s*,\\s*");
-        mimes = new HashSet<String>();
-        Collections.addAll(mimes, mimeTokens);
-
-        String[] httpTokens = supportedHttpVersion.split("\\s*,\\s*");
-        https = new HashSet<String>();
-        Collections.addAll(https, httpTokens);
+    private HashSet<String> commaSeparatedStringToSet(String input){
+        String[] tokens = input.split("\\s*,\\s*");
+        HashSet<String> result = new HashSet<String>();
+        Collections.addAll(result,tokens);
+        return result;
     }
 
     public boolean isSupportedMethod(String method){
@@ -67,6 +63,14 @@ public class ServerConfig{
 
     public boolean isSupportedMimeType(String mime){
         return mimes.contains(mime);
+    }
+
+    public boolean isDirListingAllowed(){
+        return allowListing.equals("true") ? true : false;
+    }
+
+    public boolean isWelcomeFile(String file){
+        return defaultFiles.contains(file);
     }
 
     /**

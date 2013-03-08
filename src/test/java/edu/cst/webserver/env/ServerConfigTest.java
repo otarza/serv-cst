@@ -25,6 +25,17 @@ public class ServerConfigTest {
         Assert.assertFalse(config.isSupportedMimeType("image/jpg"));
     }
 
+    @Test
+    public void testDirectoryListing(){
+        Assert.assertTrue(config.isDirListingAllowed());
+    }
+
+    @Test
+    public void testWellcomeFile(){
+        Assert.assertTrue(config.isWelcomeFile("index.html"));
+        Assert.assertTrue(config.isWelcomeFile("index.htm"));
+    }
+
     /**
      * @author Rezo
      */
