@@ -1,6 +1,7 @@
 package edu.cst.webserver.env;
 
 import edu.cst.webserver.http.HttpHeader;
+import edu.cst.webserver.http.HttpMime;
 import edu.cst.webserver.http.HttpRequestException;
 import edu.cst.webserver.http.HttpStatus;
 
@@ -16,11 +17,6 @@ import java.net.URLConnection;
  */
 public class MimeTypeDetector {
 
-    public static String detectedMimeType;
-
-    private  MimeTypeDetector(String type){
-               this.detectedMimeType = type;
-    }
     public static String detectMimeType(String filePath) throws IOException, HttpRequestException {
         File file = new File(filePath);
         String mime = "";
@@ -29,8 +25,8 @@ public class MimeTypeDetector {
                 URL url = new URL("file", "", file.getPath());
                 URLConnection conn = url.openConnection();
                 mime = conn.getContentType();
-                if(mime.equals("content/unknown")){
-                    mime = "application/octet-stream";
+                if(mime.equals(HttpMime.CONTENT_UNKNOWN)){
+                    mime = HttpMime.APPLICATION_OCTET_STREAM;
                 }
             } else if( file.isDirectory()){
                 throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File not Found, Directory Located!");
@@ -41,8 +37,4 @@ public class MimeTypeDetector {
         return mime;
     }
 
-
-    public static String getDetectedMimeType() {
-        return detectedMimeType;
-    }
 }

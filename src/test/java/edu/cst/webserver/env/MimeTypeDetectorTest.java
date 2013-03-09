@@ -1,5 +1,6 @@
 package edu.cst.webserver.env;
 
+import edu.cst.webserver.http.HttpMime;
 import edu.cst.webserver.http.HttpRequestException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class MimeTypeDetectorTest {
     public void testMimeTypeIsImagePNG() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/image.png").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("image/png", mimeType);
+        Assert.assertEquals(HttpMime.IMAGE_PNG, mimeType);
     }
 
     /**
@@ -36,7 +37,7 @@ public class MimeTypeDetectorTest {
     public void testMimeTypeImageJPEG() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/image.jpeg").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("image/jpeg", mimeType);
+        Assert.assertEquals(HttpMime.IMAGE_JPEG, mimeType);
     }
 
     /**
@@ -48,7 +49,7 @@ public class MimeTypeDetectorTest {
     public void testMimeTypeImageGIF() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/image.gif").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("image/gif", mimeType);
+        Assert.assertEquals(HttpMime.IMAGE_GIF, mimeType);
     }
 
     /**
@@ -61,7 +62,7 @@ public class MimeTypeDetectorTest {
     public void testMimeTypeTextPLAIN() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/text.txt").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("text/plain", mimeType);
+        Assert.assertEquals(HttpMime.TEXT_PLAIN, mimeType);
     }
 
     /**
@@ -97,7 +98,7 @@ public class MimeTypeDetectorTest {
     public void testMimeTypeTextXML() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/app.xml").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("application/xml", mimeType);
+        Assert.assertEquals(HttpMime.APPLICATION_XML, mimeType);
     }
     /**
      * Unknown filetype
@@ -108,6 +109,6 @@ public class MimeTypeDetectorTest {
     public void testUnknownMimeType() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/bb.brb").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("application/octet-stream", mimeType);
+        Assert.assertEquals(HttpMime.APPLICATION_OCTET_STREAM, mimeType);
     }
 }
