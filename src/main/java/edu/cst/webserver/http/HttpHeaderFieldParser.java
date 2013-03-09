@@ -37,15 +37,21 @@ public class HttpHeaderFieldParser {
      */
     public static Map<String, String> parse(String headerField) throws HttpRequestException {
         Map<String, String> headers = new HashMap<String, String>();
-
-
-        boolean isValid = hasValidCharacters(headerField);
-        if (isValid) {
+        boolean isValid = false;
+        if (headerField != null && !headerField.isEmpty()) {
             String tokens[] = headerField.trim().split(":\\s*", 2);
-            String key = tokens[0];
-            String value = tokens[1];
-            headers.put(key, value);
+            if (tokens.length == 2 && tokens[0].length() > 0 && tokens[1].length() > 0 && hasValidCharacters(headerField)) {
+                String key = tokens[0];
+                String value = tokens[1];
+                headers.put(key, value);
+                isValid = true;
+            } else {
+                isValid = false;
+            }
         } else {
+            isValid = false;
+        }
+        if (!isValid) {
             throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
         }
         return headers;
@@ -53,33 +59,16 @@ public class HttpHeaderFieldParser {
 
     private static boolean hasValidCharacters(String headerField) {
         boolean allowed = true;
-        String tokens[];
-
-        if(headerField == null){
-            return false;
-        }
-
-        tokens = headerField.trim().split(":\\s*", 2);
-
-        if(tokens.length != 2){
-            return false;
-        }
-
-        if(tokens[0].length() > 0 && tokens[1].length() > 0){
-            for (int i = 0; i < tokens[0].length(); i++) {
-                int code = tokens[0].charAt(i);
-                if(code <0 || code > 128){
-                    allowed = false;
-                    break;
-                }
-
-                if ((allowedHeaderFieldKeyChars[code] == 0 )) {
-                    allowed = false;
-                    break;
-                }
+        for (int i = 0; i < headerField.length(); i++) {
+            int code = headerField.charAt(i);
+            if (code < 0 || code > 128) {
+                allowed = false;
+                break;
             }
-        } else {
-            allowed = false;
+            if ((allowedHeaderFieldKeyChars[code] == 0)) {
+                allowed = false;
+                break;
+            }
         }
         return allowed;
     }
