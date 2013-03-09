@@ -16,6 +16,7 @@ public class HttpResponseTest {
     public void testHttpResponsePositive() throws IOException {
         HttpRequestDispatcher response = new HttpRequestDispatcher();
 
+
         HttpResponseWrapper res = response.dispatch();
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(HttpHeader.ACCEPT, "text/html");
@@ -23,8 +24,8 @@ public class HttpResponseTest {
 
 
         Assert.assertEquals(headers,res.getHeaders());
-        Assert.assertEquals(HttpStatus.Code.OK,res.getStatusCode());
-        Assert.assertEquals("test",res.getMessageBody());
+        Assert.assertEquals(HttpStatus.Code.OK, res.getStatusCode());
+        Assert.assertEquals("test", res.getMessageBody());
     }
 
 }

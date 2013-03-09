@@ -1,5 +1,10 @@
 package edu.cst.webserver.env;
 
+import edu.cst.webserver.http.HttpHeader;
+import edu.cst.webserver.http.HttpRequestException;
+import edu.cst.webserver.http.HttpStatus;
+
+import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,7 +21,7 @@ public class MimeTypeDetector {
     private  MimeTypeDetector(String type){
                this.detectedMimeType = type;
     }
-    public static MimeTypeDetector detectMimeType(String filePath) throws IOException {
+    public static String detectMimeType(String filePath) throws IOException, HttpRequestException {
         File file = new File(filePath);
         String mime = "";
         if(file.exists()){
@@ -24,27 +29,16 @@ public class MimeTypeDetector {
                 URL url = new URL("file", "", file.getPath());
                 URLConnection conn = url.openConnection();
                 mime = conn.getContentType();
-
-
-
-                if(mime.equals("unknown")){
-                    //TODO return application/octet-stream  [DN]
+                if(mime.equals("content/unknown")){
+                    mime = "application/octet-stream";
                 }
-                // response.setHeader("Content-Type", [დადგენილი MIME ტიპი]
-                // response.setHeader("Content-Length", file.length());
-                // response.write(urlConnection.getInputStream());
             } else if( file.isDirectory()){
-                // წავკითხოთ ყველა ფაილის სახელი დირექტორიაში, დავაგენერიროთ HTML
-                // და დავაბრუნოთ response ობიექტის მეშვეობით
+                throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File not Found, Directory Located!");
             }
         } else {
-        // ფაილი ვერ მოიძებნა
-        // დავადგინოთ გვაქვს თუ არა ამ path - ისთვის რეგისტრირებული სკრიპტი
-        // თუ გვაქვს მაშინ შევასრულოთ სკრიპტი და რეზულტატი დავაბრუნოთ როგორც text/html
-        // თუ არ გვაქვს არც სკრიპტი მაშინ:
-        // response.error(HttpStatus.Code.NOT_FOUND);
+            throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File Not Found!");
     }
-        return new MimeTypeDetector(mime);
+        return mime;
     }
 
 
