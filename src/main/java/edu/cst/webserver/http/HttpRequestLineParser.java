@@ -2,22 +2,13 @@ package edu.cst.webserver.http;
 
 import edu.cst.webserver.env.ServerConfig;
 
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Rezo
- * Date: 3/1/13
- * Time: 12:39 AM
- * To change this template use File | Settings | File Templates.
+ * @author revazi
  */
 public class HttpRequestLineParser{
-    private String requestUri;
-    private String parts[];
-    private String queryString="";
-    private String pathString ="";
-    private String fragmentString = "";
 
     public static HttpRequestLineParser newInstance(){
         return new HttpRequestLineParser();
@@ -26,8 +17,11 @@ public class HttpRequestLineParser{
     private HttpRequestLineParser(){
     }
 
-    public HttpRequestLine parse(String requestLineString) throws HttpRequestException {
-
+    public HttpRequestLine parse(String requestLineString) throws HttpRequestException, URISyntaxException {
+        String queryString = null;
+        String fragmentString = null;
+        String pathString = null;
+        String parts[];
         parts = requestLineString.trim().split("\\s+");
 
         //Check for the correct number of request parts
@@ -43,30 +37,29 @@ public class HttpRequestLineParser{
         }
         //Http Request Version Check
         String httpVersion = parts[2];
-        requestUri = parts[1];
+        URI requestUri = new URI(parts[1]);
 
-        if (!config.isSupportedHttpVersion(httpVersion)) {
-            throw new HttpRequestException(HttpStatus.Code.HTPP_VERSION_NOT_SUPPORTED);
-        }else if(requestUri.contains("?") && requestUri.contains("#")){
-   /*URI parse*/    pathString = requestUri.substring(0,requestUri.indexOf("?"));
-            queryString  = requestUri.substring(requestUri.indexOf("?"),
-                    requestUri.indexOf("#"));
-            fragmentString = requestUri.substring(requestUri.indexOf("#"));
-        }else if(requestUri.contains("?")){
-            pathString = requestUri.substring(0,requestUri.indexOf("?"));
-            queryString  = requestUri.substring(requestUri.indexOf("?"));
+        requestUri = requestUri.create(parts[1]);
+        if(requestUri.getScheme() != null){
+            pathString = requestUri.getScheme();
+            if(requestUri.getPath() != null){
+                pathString += requestUri.getPath();
+            }
         }else{
-            pathString  = requestUri.substring(0);
-        }
+            pathString = requestUri.getPath();
+        };
+
+        queryString = requestUri.getQuery();
+        fragmentString = requestUri.getFragment();
 
         HttpRequestLine requestLine = new HttpRequestLine();
-
         requestLine.setMethod(HttpMethod.getMethodByName(methodName));
         requestLine.setHttpVersion(httpVersion);
         requestLine.setPath(pathString);
+        requestLine.setRequestUri(requestLineString);
         requestLine.setQueryString(queryString);
         requestLine.setFragment(fragmentString);
-        requestLine.setRequestUri(requestLineString);
+
 
         return requestLine;
     }
