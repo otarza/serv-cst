@@ -1,6 +1,7 @@
 package edu.cst.webserver.http;
 
-import java.util.HashMap;
+import edu.cst.webserver.uri.QueryString;
+
 import java.util.Map;
 
 /**
@@ -12,71 +13,63 @@ import java.util.Map;
  */
 public class HttpRequestWrapper implements HttpRequest{
 
-    private String request;
-    private String requestbody;
+    private HttpRequestLine requestLine;
+    private String requestBody;
     Map<String, String> headers;
 
 
-    public HttpRequestWrapper(String requestLine, Map<String, String> headers, String requestbody){
-        this.request = requestLine;
+    public HttpRequestWrapper(HttpRequestLine requestLine, Map<String, String> headers, String requestBody){
+        this.requestLine = requestLine;
         this.headers = headers;
-        this.requestbody = requestbody;
+        this.requestBody = requestBody;
 
     }
+
 
 
     @Override
     public HttpMethod.Type getRequestMethod(){
-        HttpRequestLine parsedLine =   getHttpRequestLine();
-        return parsedLine.getMethod();
+        return requestLine.getMethod();
     }
 
     @Override
     public HttpRequestLine getHttpRequestLine() {
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        try {
-            HttpRequestLine requestLine = parser.parse(request);
-            return requestLine;
-        } catch (HttpRequestException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return requestLine;
     }
 
     @Override
     public String getRequestURI() {
-        HttpRequestLine parsedLine =   getHttpRequestLine();
-        return parsedLine.getRequestUri();
+        return requestLine.getRequestUri();
     }
 
     @Override
     public String getHttpVersion() {
-        HttpRequestLine parsedLine =   getHttpRequestLine();
-        return parsedLine.getHttpVersion();
+        return requestLine.getHttpVersion();
     }
 
     @Override
     public Map<String, String> getAllHeaders() {
-        return null;
+        return headers;
     }
 
     @Override
     public String getHeader(String headerName) {
-        return null;
+        return headers.get(headerName);
     }
 
     @Override
     public String getContentType() {
-        return null;
+        return  headers.get(HttpHeader.CONTENT_TYPE);
     }
 
     @Override
     public Map<String, String> getParams() {
-        return null;
+
+       return QueryString.parse(requestLine.getQueryString()) ;
     }
 
     @Override
     public String getPath() {
-        return null;
+        return requestLine.getPath();
     }
 }

@@ -1,6 +1,7 @@
 package edu.cst.webserver.http;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Demur
@@ -36,14 +37,14 @@ public interface HttpResponse {
      * Sends error response with specified error code
      * @param errorStatus
      */
-    public void error(HttpStatus.Code errorStatus);
+    public void error(HttpStatus.Code errorStatus) throws HttpRequestException;
 
     /**
      * * Sends error response with specified error code and specific body
      * @param errorStatus
      * @param body
      */
-    public void error(HttpStatus.Code errorStatus, String body);
+    public void error(HttpStatus.Code errorStatus, String body) throws HttpRequestException;
 
     /**
      * Writes passed content to underlying OutputStream
@@ -55,4 +56,20 @@ public interface HttpResponse {
      * Immediately flushes underlying OutputStream
      */
     public void flush() throws IOException;
+
+    /**
+     *
+     */
+    public HttpStatus.Code getStatusCode();
+
+    /**
+     *
+     */
+    public Map<String, String> getHeaders();
+
+    /**
+     *
+     */
+    public String getMessageBody();
+
 }
