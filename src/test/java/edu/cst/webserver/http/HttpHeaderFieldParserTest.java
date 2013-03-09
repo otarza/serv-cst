@@ -13,18 +13,18 @@ import java.util.Map;
  * Time: 12:57 PM
  * To change this template use File | Settings | File Templates.
  */
-public class HeaderFieldTest {
+public class HttpHeaderFieldParserTest {
 
     @Test(expected = HttpRequestException.class)
     public void parseInvalidHeaderFieldTest() throws HttpRequestException {
-        HeaderField.parse(" Accept-Language :    en-us,en;q=0.5 ");
+        HttpHeaderFieldParser.parse(" Accept-Language :    en-us,en;q=0.5 ");
     }
 
     @Test
     public void parseTest() throws HttpRequestException {
         Map<String, String> fieldsMap = new HashMap<String, String>();
         fieldsMap.put("Accept-Language", "en-us,en;q=0.5");
-        Assert.assertEquals(fieldsMap, HeaderField.parse("Accept-Language:en-us,en;q=0.5"));
+        Assert.assertEquals(fieldsMap, HttpHeaderFieldParser.parse("Accept-Language:en-us,en;q=0.5"));
 
     }
 }

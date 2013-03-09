@@ -10,9 +10,9 @@ import java.util.Map;
  * Time: 12:54 PM
  * To change this template use File | Settings | File Templates.
  */
-public class HeaderField {
+public class HttpHeaderFieldParser {
     //static US ASCII character lookup array
-      static char allowedHeaderFieldKeyChars[] = {
+    private static char allowedHeaderFieldKeyChars[] = {
             0,    0,    0,    0,    0,    0,    0,    0,
             0,    0,    0,    0,    0,    0,    0,    0,
             0,    0,    0,    0,    0,    0,    0,    0,
@@ -36,27 +36,51 @@ public class HeaderField {
      * Parses headerField string and if its valid returns key value map, If not throws  HttpRequestException
      */
     public static Map<String, String> parse(String headerField) throws HttpRequestException {
-        Map<String, String> splittedField = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<String, String>();
 
-        String splittedAr[] = headerField.trim().split(":\\s*", 2);
-        boolean isValid = hasValidCharacters(splittedAr[0]);
+
+        boolean isValid = hasValidCharacters(headerField);
         if (isValid) {
-            String key = splittedAr[0];
-            String value = splittedAr[1];
-            splittedField.put(key, value);
+            String tokens[] = headerField.trim().split(":\\s*", 2);
+            String key = tokens[0];
+            String value = tokens[1];
+            headers.put(key, value);
         } else {
             throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
         }
-        return splittedField;
+        return headers;
     }
 
-    public static boolean hasValidCharacters(String headerField) {
-        for (int i = 0; i < headerField.length(); i++) {
-            int code = headerField.charAt(i);
-            if ((allowedHeaderFieldKeyChars[code] <= 0 || allowedHeaderFieldKeyChars[code] > 128)) {
-                return false;
-            }
+    private static boolean hasValidCharacters(String headerField) {
+        boolean allowed = true;
+        String tokens[];
+
+        if(headerField == null){
+            return false;
         }
-        return true;
+
+        tokens = headerField.trim().split(":\\s*", 2);
+
+        if(tokens.length != 2){
+            return false;
+        }
+
+        if(tokens[0].length() > 0 && tokens[1].length() > 0){
+            for (int i = 0; i < tokens[0].length(); i++) {
+                int code = tokens[0].charAt(i);
+                if(code <0 || code > 128){
+                    allowed = false;
+                    break;
+                }
+
+                if ((allowedHeaderFieldKeyChars[code] == 0 )) {
+                    allowed = false;
+                    break;
+                }
+            }
+        } else {
+            allowed = false;
+        }
+        return allowed;
     }
 }
