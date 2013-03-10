@@ -37,7 +37,7 @@ public class HttpHeaderFieldParserExceptionsTest {
     }
 
     @Test(expected = HttpRequestException.class)
-    public void testInvalidChartInHeaderFieldKeyThrowsException() throws HttpRequestException {
+        public void testInvalidChartInHeaderFieldKeyThrowsException() throws HttpRequestException {
         HttpHeaderFieldParser.parse(header);
         Assert.fail("Fail Cause Header Field is: \"" + header + "\"");
     }
