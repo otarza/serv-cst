@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author Demur
  */
 public class MimeTypeDetectorTest {
-
+    private String path = "/C:/Users/Demur/IdeaProjects/serv-cst/target/test-classes/filetypes/";
     private String getMimeType(String path) throws IOException, HttpRequestException {
         return MimeTypeDetector.detectMimeType(path);
     }
@@ -74,7 +74,7 @@ public class MimeTypeDetectorTest {
     public void testMimeTypeTextJS() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/text.js").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("text/javascript", mimeType);
+        Assert.assertEquals(HttpMime.TEXT_JAVASCRIPT, mimeType);
     }*/
 
     /**
@@ -82,11 +82,11 @@ public class MimeTypeDetectorTest {
      * @throws IOException
      * @throws HttpRequestException
      */
-  /*  @Test
+  /* @Test
     public void testMimeTypeTextCSS() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/text.css").getPath();
         String mimeType = getMimeType(path);
-        Assert.assertEquals("text/css", mimeType);
+        Assert.assertEquals(HttpMime.TEXT_CSS, mimeType);
     }*/
 
     /**
@@ -111,4 +111,13 @@ public class MimeTypeDetectorTest {
         String mimeType = getMimeType(path);
         Assert.assertEquals(HttpMime.APPLICATION_OCTET_STREAM, mimeType);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testFileNotFound() throws IOException, HttpRequestException {
+        String path = MimeTypeDetectorTest.class.getResource("/filetypes/no.no").getPath();
+        String mimeType = getMimeType(path);
+        Assert.assertEquals(HttpMime.APPLICATION_OCTET_STREAM, mimeType);
+    }
+
+
 }

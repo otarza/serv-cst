@@ -46,8 +46,8 @@ public class ServerConfig{
         methods = commaSeparatedStringToSet(properties.getProperty("http.methods"));
         mimes = commaSeparatedStringToSet(properties.getProperty("mime.types"));
         https = commaSeparatedStringToSet(properties.getProperty("http.version"));
-        allowListing = Boolean.valueOf(properties.getProperty("directory.allowListing"));
         defaultFiles = commaSeparatedStringToSet(properties.getProperty("directory.defaultFiles"));
+        allowListing = Boolean.valueOf(properties.getProperty("directory.allowListing"));
     }
 
     private HashSet<String> commaSeparatedStringToSet(String input){

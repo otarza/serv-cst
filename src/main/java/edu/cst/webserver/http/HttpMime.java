@@ -3,12 +3,7 @@ package edu.cst.webserver.http;
 import sun.net.www.content.text.plain;
 
 /**
- * Created with IntelliJ IDEA.
- *
  * @author Demur
- *         Date: 3/10/13
- *         Time: 2:00 AM
- *         To change this template use File | Settings | File Templates.
  */
 public class HttpMime {
     public final static String IMAGE_PNG = "image/png";
