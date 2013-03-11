@@ -2,72 +2,65 @@ package edu.cst.webserver.http;
 
 import edu.cst.webserver.env.ServerConfig;
 
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Rezo
- * Date: 3/1/13
- * Time: 12:39 AM
- * To change this template use File | Settings | File Templates.
+ * @author revazi
  */
-public class HttpRequestLineParser{
-    private String requestUri;
-    private String parts[];
-    private String queryString="";
-    private String pathString ="";
-    private String fragmentString = "";
+public class HttpRequestLineParser {
 
-    public static HttpRequestLineParser newInstance(){
+    public static HttpRequestLineParser newInstance() {
         return new HttpRequestLineParser();
     }
+    private HttpRequestLineParser() {
 
-    private HttpRequestLineParser(){
     }
 
     public HttpRequestLine parse(String requestLineString) throws HttpRequestException {
 
-        parts = requestLineString.trim().split("\\s+");
+        String tokens[];
 
-        //Check for the correct number of request parts
-        if (parts.length != 3){
+        ServerConfig config = ServerConfig.getInstance();
+        tokens = requestLineString.trim().split("\\s+");
+
+        if (tokens.length != 3) {
             throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
         }
-        //HTTP Method Check and Uppercase
-        ServerConfig config = ServerConfig.getInstance();
-        String methodName = parts[0].toUpperCase();
 
-        if(!config.isSupportedMethod(methodName)){
+        String methodName = tokens[0].toUpperCase();
+        if(!config.isSupportedMethod(methodName)) {
             throw new HttpRequestException(HttpStatus.Code.METHOD_NOT_ALLOWED);
         }
-        //Http Request Version Check
-        String httpVersion = parts[2];
-        requestUri = parts[1];
 
-        if (!config.isSupportedHttpVersion(httpVersion)) {
+        String httpVersion = tokens[2];
+        if(!config.isSupportedHttpVersion(tokens[2])) {
             throw new HttpRequestException(HttpStatus.Code.HTPP_VERSION_NOT_SUPPORTED);
-        }else if(requestUri.contains("?") && requestUri.contains("#")){
-   /*URI parse*/    pathString = requestUri.substring(0,requestUri.indexOf("?"));
-            queryString  = requestUri.substring(requestUri.indexOf("?"),
-                    requestUri.indexOf("#"));
-            fragmentString = requestUri.substring(requestUri.indexOf("#"));
-        }else if(requestUri.contains("?")){
-            pathString = requestUri.substring(0,requestUri.indexOf("?"));
-            queryString  = requestUri.substring(requestUri.indexOf("?"));
-        }else{
-            pathString  = requestUri.substring(0);
         }
 
-        HttpRequestLine requestLine = new HttpRequestLine();
+        String requestUriString = tokens[1];
+        if(requestUriString == null ||  requestUriString.isEmpty()) {
+            throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
+        }
 
-        requestLine.setMethod(HttpMethod.getMethodByName(methodName));
-        requestLine.setHttpVersion(httpVersion);
-        requestLine.setPath(pathString);
-        requestLine.setQueryString(queryString);
-        requestLine.setFragment(fragmentString);
-        requestLine.setRequestUri(requestLineString);
+        try{
 
-        return requestLine;
+            URI requestUri = new URI(tokens[1]);
+
+            HttpRequestLine requestLine = new HttpRequestLine();
+            requestLine.setMethod(HttpMethod.getMethodByName(methodName));
+            requestLine.setHttpVersion(httpVersion);
+            requestLine.setRequestUri(tokens[1]);
+            requestLine.setPath(requestUri.getPath());
+            requestLine.setQueryString(requestUri.getQuery());
+            requestLine.setFragment(requestUri.getFragment());
+
+            return requestLine;
+
+        } catch(URISyntaxException e) {
+
+            throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
+
+        }
     }
 }

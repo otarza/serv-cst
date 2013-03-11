@@ -9,11 +9,20 @@ package edu.cst.webserver.http;
  */
 public class HttpRequestLine {
     private HttpMethod.Type method;
+    private String requestLineString;
     private String requestUri;
     private String path;
     private String queryString;
     private String fragment;
     private String httpVersion;
+
+    public String getRequestLineString(){
+        return requestLineString;
+    }
+    public void setRequestLineString(String requestLineString){
+        this.requestLineString = requestLineString;
+
+    }
 
     public HttpMethod.Type getMethod() {
         return method;
