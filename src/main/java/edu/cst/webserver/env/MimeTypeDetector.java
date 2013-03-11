@@ -20,21 +20,34 @@ public class MimeTypeDetector {
     public static String detectMimeType(String filePath) throws IOException, HttpRequestException {
         File file = new File(filePath);
         String mime = "";
-        if(file.exists()){
-            if(file.isFile()){
-                URL url = new URL("file", "", file.getPath());
-                URLConnection conn = url.openConnection();
-                mime = conn.getContentType();
-                if(mime.equals(HttpMime.CONTENT_UNKNOWN.getMime())){
-                    mime = HttpMime.APPLICATION_OCTET_STREAM.getMime();
-                }
-            } else if( file.isDirectory()){
+        if(file.exists()) {
+            if(file.isFile()) {
+                mime = getMimeType(file);
+            } else if( file.isDirectory()) {
                 throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File not Found, Directory Located!");
             }
         } else {
             throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File Not Found!");
-    }
+        }
         return mime;
+    }
+
+    private static String getMimeType(File file) throws IOException {
+        URL url = new URL("file", "", file.getPath());
+        URLConnection conn = url.openConnection();
+        String mimeType = conn.getContentType();
+        String fileName = file.getCanonicalPath();
+
+        if(mimeType.equals(HttpMime.CONTENT_UNKNOWN.getMime())) {
+            if(fileName.endsWith(".js")) {
+                mimeType = HttpMime.TEXT_JAVASCRIPT.getMime();
+            }else if(fileName.endsWith(".css")) {
+                mimeType = HttpMime.TEXT_CSS.getMime();
+            } else {
+                mimeType = HttpMime.APPLICATION_OCTET_STREAM.getMime();
+            }
+        }
+        return mimeType;
     }
 
 }

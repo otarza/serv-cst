@@ -1,6 +1,5 @@
 package edu.cst.webserver.env;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
 import edu.cst.webserver.http.HttpMime;
 import edu.cst.webserver.http.HttpRequestException;
 import org.junit.Assert;
@@ -77,24 +76,28 @@ public class MimeTypeDetectorTest {
      * @throws IOException
      * @throws HttpRequestException
      */
-   /* @Test
+    @Test
     public void testMimeTypeTextJS() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/text.js").getPath();
+        HttpMime mimeJs =  HttpMime.TEXT_JAVASCRIPT;
+
         String mimeType = getMimeType(path);
-        Assert.assertEquals(HttpMime.TEXT_JAVASCRIPT, mimeType);
-    }*/
+        Assert.assertEquals(mimeJs.getMime(), mimeType);
+    }
 
     /**
      * text/css
      * @throws IOException
      * @throws HttpRequestException
      */
-  /* @Test
+    @Test
     public void testMimeTypeTextCSS() throws IOException, HttpRequestException {
         String path = MimeTypeDetectorTest.class.getResource("/filetypes/text.css").getPath();
+        HttpMime mimeCss =  HttpMime.TEXT_CSS;
+
         String mimeType = getMimeType(path);
-        Assert.assertEquals(HttpMime.TEXT_CSS, mimeType);
-    }*/
+        Assert.assertEquals(mimeCss.getMime(), mimeType);
+    }
 
     /**
      * application/xml
