@@ -1,5 +1,8 @@
 package edu.cst.webserver.http;
 
+
+import junit.framework.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -7,11 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Created with IntelliJ IDEA.
- * User: user
- * Date: 3/9/13
- * Time: 4:26 PM
- * To change this template use File | Settings | File Templates.
+ * @author revazi
  */
 @RunWith(Parameterized.class)
 public class HttpRequestLineParserNegativeTest {
@@ -25,33 +24,46 @@ public class HttpRequestLineParserNegativeTest {
     private String expectedHttpVersion;
 
     public HttpRequestLineParserNegativeTest(
-                                String requestLineString,
-                                String expectedMethod,
-                                String expectedPath,
-                                String expectedQueryString,
-                                String expectedFragment,
-                                String expectedHttpVersion){
-            this.requestLineString = requestLineString;
-            this.expectedMethod = expectedMethod;
-            this.expectedPath = expectedPath;
-            this.expectedQueryString = expectedQueryString;
-            this.expectedFragment = expectedFragment;
-            this.expectedHttpVersion = expectedHttpVersion;
+            String requestLineString,
+            String expectedMethod,
+            String expectedPath,
+            String expectedQueryString,
+            String expectedFragment,
+            String expectedHttpVersion){
+        this.requestLineString = requestLineString;
+        this.expectedMethod = expectedMethod;
+        this.expectedPath = expectedPath;
+        this.expectedQueryString = expectedQueryString;
+        this.expectedFragment = expectedFragment;
+        this.expectedHttpVersion = expectedHttpVersion;
     }
     @Parameterized.Parameters
-    public static Collection getRequestLineData(){
-            return Arrays.asList(new Object[][]{
-                    {
-                            "GET /path/to/resource HTTP/1.1", // Request line to parse
-                            HttpMethod.METHOD_GET,            // Expected HTTP method
-                            "/path/to/resource",              // Expected Path
-                            null,                               // Expected Query String
-                            null,                               // Expected Fragment
-                            HTTP_VERSION                      // Expected HTTP version
-                    }
+    public static Collection getRequestLineData() {
+        return Arrays.asList(new Object[][]{
+                {
+                        "GET /path?></.?/to/resource HTTP/1.1", // Request line to parse
+                        HttpMethod.METHOD_GET,            // Expected HTTP method
+                        "/path?></.?/to/resource",        // Expected Path
+                        null,                             // Expected Query String
+                        null,                             // Expected Fragment
+                        HTTP_VERSION                      // Expected HTTP version
+                },
+                {
+                        "GET /with_\"stupid\"_quotes?foo=\"bar\" HTTP/1.1\r\n\r\n",
+                        HttpMethod.METHOD_GET,
+                        "with_\"stupid\"_quotes",
+                        "foo=\"bar\"",
+                        null,
+                        HTTP_VERSION
+                }
 
-            });
+        });
     }
 
-
+    @Test(expected = HttpRequestException.class)
+    public void uriSyntaxTest() throws HttpRequestException {
+        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
+        HttpRequestLine requestLine = parser.parse(requestLineString);
+        Assert.fail();
+    }
 }

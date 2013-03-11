@@ -4,6 +4,7 @@ import edu.cst.webserver.env.ServerConfig;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 public class HttpRequestWrapperTest {
 
     @Test
-    public void testHttpRequest(){
+    public void testHttpRequest() throws URISyntaxException {
 
         Map<String, String> headers = new HashMap<String, String>();
 

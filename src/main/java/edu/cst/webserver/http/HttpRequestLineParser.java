@@ -8,59 +8,59 @@ import java.net.URISyntaxException;
 /**
  * @author revazi
  */
-public class HttpRequestLineParser{
+public class HttpRequestLineParser {
 
-    public static HttpRequestLineParser newInstance(){
+    public static HttpRequestLineParser newInstance() {
         return new HttpRequestLineParser();
     }
+    private HttpRequestLineParser() {
 
-    private HttpRequestLineParser(){
     }
 
-    public HttpRequestLine parse(String requestLineString) throws HttpRequestException, URISyntaxException {
-        String queryString = null;
-        String fragmentString = null;
-        String pathString = null;
-        String parts[];
-        parts = requestLineString.trim().split("\\s+");
+    public HttpRequestLine parse(String requestLineString) throws HttpRequestException {
 
-        //Check for the correct number of request parts
-        if (parts.length != 3){
+        String tokens[];
+
+        ServerConfig config = ServerConfig.getInstance();
+        tokens = requestLineString.trim().split("\\s+");
+
+        if (tokens.length != 3) {
             throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
         }
-        //HTTP Method Check and Uppercase
-        ServerConfig config = ServerConfig.getInstance();
-        String methodName = parts[0].toUpperCase();
 
-        if(!config.isSupportedMethod(methodName)){
+        String methodName = tokens[0].toUpperCase();
+        if(!config.isSupportedMethod(methodName)) {
             throw new HttpRequestException(HttpStatus.Code.METHOD_NOT_ALLOWED);
         }
-        //Http Request Version Check
-        String httpVersion = parts[2];
-        URI requestUri = new URI(parts[1]);
 
-        requestUri = requestUri.create(parts[1]);
-        if(requestUri.getScheme() != null){
-            pathString = requestUri.getScheme();
-            if(requestUri.getPath() != null){
-                pathString += requestUri.getPath();
-            }
-        }else{
-            pathString = requestUri.getPath();
-        };
+        String httpVersion = tokens[2];
+        if(!config.isSupportedHttpVersion(tokens[2])) {
+            throw new HttpRequestException(HttpStatus.Code.HTPP_VERSION_NOT_SUPPORTED);
+        }
 
-        queryString = requestUri.getQuery();
-        fragmentString = requestUri.getFragment();
+        String requestUriString = tokens[1];
+        if(requestUriString == null ||  requestUriString.isEmpty()) {
+            throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
+        }
 
-        HttpRequestLine requestLine = new HttpRequestLine();
-        requestLine.setMethod(HttpMethod.getMethodByName(methodName));
-        requestLine.setHttpVersion(httpVersion);
-        requestLine.setPath(pathString);
-        requestLine.setRequestUri(requestLineString);
-        requestLine.setQueryString(queryString);
-        requestLine.setFragment(fragmentString);
+        try{
 
+            URI requestUri = new URI(tokens[1]);
 
-        return requestLine;
+            HttpRequestLine requestLine = new HttpRequestLine();
+            requestLine.setMethod(HttpMethod.getMethodByName(methodName));
+            requestLine.setHttpVersion(httpVersion);
+            requestLine.setRequestUri(tokens[1]);
+            requestLine.setPath(requestUri.getPath());
+            requestLine.setQueryString(requestUri.getQuery());
+            requestLine.setFragment(requestUri.getFragment());
+
+            return requestLine;
+
+        } catch(URISyntaxException e) {
+
+            throw new HttpRequestException(HttpStatus.Code.BAD_REQUEST);
+
+        }
     }
 }
