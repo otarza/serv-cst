@@ -4,11 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Otar
- * Date: 2/28/13
- * Time: 12:54 PM
- * To change this template use File | Settings | File Templates.
+ * @author Otar
  */
 public class HttpHeaderFieldParser {
     //static US ASCII character lookup array
@@ -40,7 +36,7 @@ public class HttpHeaderFieldParser {
         boolean isValid = false;
         if (headerField != null && !headerField.isEmpty()) {
             String tokens[] = headerField.trim().split(":\\s*", 2);
-            if (tokens.length == 2 && tokens[0].length() > 0 && tokens[1].length() > 0 && hasValidCharacters(headerField)) {
+            if (tokens.length == 2 && tokens[0].length() > 0 && tokens[1].length() > 0 && hasValidCharacters(tokens[0])) {
                 String key = tokens[0];
                 String value = tokens[1];
                 headers.put(key, value);
