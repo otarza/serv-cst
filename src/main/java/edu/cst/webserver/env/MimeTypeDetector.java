@@ -25,8 +25,8 @@ public class MimeTypeDetector {
                 URL url = new URL("file", "", file.getPath());
                 URLConnection conn = url.openConnection();
                 mime = conn.getContentType();
-                if(mime.equals(HttpMime.CONTENT_UNKNOWN)){
-                    mime = HttpMime.APPLICATION_OCTET_STREAM;
+                if(mime.equals(HttpMime.CONTENT_UNKNOWN.getMime())){
+                    mime = HttpMime.APPLICATION_OCTET_STREAM.getMime();
                 }
             } else if( file.isDirectory()){
                 throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File not Found, Directory Located!");
