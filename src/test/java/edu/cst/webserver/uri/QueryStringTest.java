@@ -11,6 +11,7 @@ package edu.cst.webserver.uri;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,4 +61,23 @@ public class QueryStringTest {
         Assert.assertEquals(m, QueryString.parse("param1=value1&param2=val%20ue&pa%20ram3=value3#hello"));
     }
 
+    @Test
+    public void testEmptyQueryString() {
+        Assert.assertEquals(Collections.emptyMap(), QueryString.parse(""));
+    }
+
+    @Test
+    public void testNullQueryString() {
+        Assert.assertEquals(Collections.emptyMap(), QueryString.parse(null));
+    }
+
+    @Test
+    public void testQueryParamWithNoKey() {
+        String queryString = "param1=value1&=value";
+        Map<String, String> result = QueryString.parse(queryString);
+
+        Map<String, String> m = new HashMap<String, String>();
+        m.put("param1", "value1");
+        Assert.assertEquals(m, result);
+    }
 }

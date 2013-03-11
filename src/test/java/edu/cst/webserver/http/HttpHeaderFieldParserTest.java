@@ -7,11 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Otar
- * Date: 2/28/13
- * Time: 12:57 PM
- * To change this template use File | Settings | File Templates.
+ *@author Otar
  */
 public class HttpHeaderFieldParserTest {
 
