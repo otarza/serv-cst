@@ -5,27 +5,22 @@ import edu.cst.webserver.uri.QueryString;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
  * User: vaxop
- * Date: 3/7/13
- * Time: 7:43 AM
- * To change this template use File | Settings | File Templates.
  */
 public class HttpRequestWrapper implements HttpRequest{
 
     private HttpRequestLine requestLine;
     private String requestBody;
-    Map<String, String> headers;
-
+    private Map<String, String> headers;
+    private Map<String,String> queryParams;
 
     public HttpRequestWrapper(HttpRequestLine requestLine, Map<String, String> headers, String requestBody){
         this.requestLine = requestLine;
         this.headers = headers;
         this.requestBody = requestBody;
+        this.queryParams = QueryString.parse(requestLine.getQueryString());
 
     }
-
-
 
     @Override
     public HttpMethod.Type getRequestMethod(){
@@ -65,7 +60,7 @@ public class HttpRequestWrapper implements HttpRequest{
     @Override
     public Map<String, String> getParams() {
 
-       return QueryString.parse(requestLine.getQueryString()) ;
+       return queryParams;
     }
 
     @Override
