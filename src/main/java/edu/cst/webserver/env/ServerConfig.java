@@ -18,6 +18,7 @@ public class ServerConfig{
     private Set<String> https;
     private Set<String> defaultFiles;
     private boolean allowListing;
+    private String documentRoot;
 
     private ServerConfig(){
         properties = new Properties();
@@ -48,6 +49,7 @@ public class ServerConfig{
         https = commaSeparatedStringToSet(properties.getProperty("http.version"));
         defaultFiles = commaSeparatedStringToSet(properties.getProperty("directory.defaultFiles"));
         allowListing = Boolean.valueOf(properties.getProperty("directory.allowListing"));
+        documentRoot = properties.getProperty("document.root");
     }
 
     private HashSet<String> commaSeparatedStringToSet(String input){
@@ -79,5 +81,12 @@ public class ServerConfig{
      */
     public boolean isSupportedHttpVersion(String httpVersion){
         return https.contains(httpVersion);
+    }
+
+    /**
+     * @author vaxop
+     */
+    public String getDocumentRoot(){
+        return this.documentRoot;
     }
 }

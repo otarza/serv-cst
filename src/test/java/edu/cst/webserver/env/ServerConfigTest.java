@@ -55,4 +55,11 @@ public class ServerConfigTest {
     public void testisSupportedHttpVersionNotAllowed(){
         Assert.assertFalse(config.isSupportedHttpVersion("HTTP/1.0"));
     }
+    /**
+     * @author vaxop
+     */
+    @Test
+    public void testGetDocumentRoot(){
+        Assert.assertEquals(config.getDocumentRoot(),"c:\\server");
+    }
 }
