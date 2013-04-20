@@ -1,15 +1,16 @@
 package edu.cst.webserver.http.handlers;
 
 import edu.cst.webserver.env.MimeTypeDetector;
-import edu.cst.webserver.http.*;
+import edu.cst.webserver.http.HttpRequest;
+import edu.cst.webserver.http.HttpRequestException;
+import edu.cst.webserver.http.HttpRequestHandler;
+import edu.cst.webserver.http.HttpResponse;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
@@ -17,13 +18,14 @@ import java.text.SimpleDateFormat;
 /**
  * @author Demur
  */
-public class HttpRequestDirectoryHandler implements HttpRequestHandler{
+public class HttpRequestFileHandler implements HttpRequestHandler {
 
     HttpRequest request;
     HttpResponse response;
     File file;
     BasicFileAttributes attributes;
-    public HttpRequestDirectoryHandler(File file, HttpRequest request,HttpResponse response) throws IOException {
+
+    public HttpRequestFileHandler(File file, HttpRequest request,HttpResponse response) throws IOException {
         this.request = request;
         this.response = response;
         this.file = file;
@@ -37,7 +39,7 @@ public class HttpRequestDirectoryHandler implements HttpRequestHandler{
 
     @Override
     public String getContentType() throws IOException, HttpRequestException {
-      return MimeTypeDetector.detectMimeType(file.toString());
+        return MimeTypeDetector.detectMimeType(file.toString());
     }
 
     @Override
@@ -52,10 +54,7 @@ public class HttpRequestDirectoryHandler implements HttpRequestHandler{
     }
 
     @Override
-    public void process(Object handle, HttpRequest request, HttpResponse response) throws HttpRequestException, IOException {
-        HttpDirFilesList v = new HttpDirFilesList(file);
-        String list = v.getDirList();
-        response.write(list);
+    public void process(Object handle, HttpRequest request, HttpResponse response) throws HttpRequestException {
 
     }
 }

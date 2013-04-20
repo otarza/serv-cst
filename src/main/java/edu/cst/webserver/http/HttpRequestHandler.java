@@ -38,5 +38,5 @@ public interface HttpRequestHandler<T> {
      * @param response
      */
     public void process(T handle, HttpRequest request, HttpResponse response)
-            throws HttpRequestException;
+            throws HttpRequestException, IOException;
 }

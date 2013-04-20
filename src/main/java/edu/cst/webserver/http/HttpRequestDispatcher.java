@@ -1,12 +1,13 @@
 package edu.cst.webserver.http;
 
 import edu.cst.webserver.http.handlers.HttpRequestDirectoryHandler;
-
+import edu.cst.webserver.http.handlers.HttpRequestFileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Demur
@@ -17,7 +18,9 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
     HttpResponse response;
     HttpRequest request;
     public HttpRequestDispatcher(HttpRequest request){
-        this.path = FileSystems.getDefault().getPath("C:/path/to/folder/resource/");
+
+
+        this.path = Paths.get(request.getPath());//FileSystems.getDefault().getPath("C:/path/to/folder/resource/");
         this.file = new File(path.toString());
         this.request = request ;
         response = new HttpResponseWrapper();
@@ -40,21 +43,11 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
         if (file.exists() && file.canRead()) {
             if (file.isDirectory()) {
                 HttpRequestHandler<File> handler = new HttpRequestDirectoryHandler(file,request,response);
-                try {
-                    handler.process(file, request, response);
-                } catch (HttpRequestException e) {
-                    // do something here
-                }
-//          return      new HttpRequestDirectoryHandler(file, request, response);
+               // handler.process();
 
-                HttpDirFilesList v = new HttpDirFilesList(file);
-
-                String list = v.getDirList();
-
-                // vaxos klasi
             } else if (file.isFile()) {
                 boolean isRegularExecutableFile = Files.isRegularFile(path) && Files.isReadable(path) && Files.isExecutable(path);
-                if (file.canExecute()) {
+                if (isRegularExecutableFile) {
 
 
                     // aq server side javascript
@@ -64,15 +57,15 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
 //           return new HttpRequestJavaHandler(file, request, response);
                 } else {
 
- /*                   HttpRequestHandler<File> handler = new HttpRequestFileHandler<File>();
-                    try {
-                        handler.process(file, request, response);
-                    } catch (HttpRequestException e) {
-                        // do something here
-                    }*/
+                   HttpRequestHandler<File> handler = new HttpRequestFileHandler(file,request,response);
 
-//             return       new HttpRequestFileHandler(file, request, response);
-//                    String mimeType = // demuris klasi romelic gveubneba mime tips
+                    try {
+                        handler.getContentType();
+                    } catch (HttpRequestException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+
+
                 }
             }
         }
