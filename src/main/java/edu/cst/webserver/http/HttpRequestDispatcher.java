@@ -72,18 +72,6 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
 
 
 
-
-    /*
-        response.setErrorHandler(this);
-
-        response.setHeader(HttpHeader.ACCEPT,"text/html");
-        response.setHeader(HttpHeader.CONTENT_LENGTH,"343");
-        response.write("test");
-
-
-
-        response.setStatus(HttpStatus.Code.OK);*/
-
         return response;
     }
 

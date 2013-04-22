@@ -1,14 +1,12 @@
 package edu.cst.webserver.http;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HttpServer {
     public static void main(String[] args) {
@@ -35,7 +33,8 @@ public class HttpServer {
             int contentLength = 10;
             String line;
             List<String> httpMessage = new ArrayList<String>();
-
+            List<String> httpHeaders = new ArrayList<String>();
+            StringBuilder body = new StringBuilder();
             while ((line = bufferedReader.readLine()) != null) {
                 httpMessage.add(line);
 
@@ -48,13 +47,31 @@ public class HttpServer {
                         if (read > -1) {
                             entityBody.write(remaining);
                         }
+                        entityBody.flush();
                     } catch (IOException e) {
                         break;
                     }
 
+                    //for(int i = 1;i<)
+
+//                    HttpHeaderFieldParser.parse_list(httpMessage);
+
+//                    HttpRequestLineParser
+
+//                    String body;
+
+
+                    HttpRequest request = new HttpRequestWrapper(null,null,"");
                     for (String messageLine : httpMessage) {
                         System.out.println(messageLine);
                     }
+
+                    OutputStream streamOut = null;
+
+                    entityBody.writeTo(streamOut);
+
+                    OutputStreamWriter writer = new OutputStreamWriter(streamOut);
+                    BufferedWriter fout = new BufferedWriter(writer);
 
                     socket.close();
                     return;

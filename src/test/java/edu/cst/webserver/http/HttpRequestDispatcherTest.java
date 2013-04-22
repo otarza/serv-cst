@@ -37,7 +37,7 @@ public class HttpRequestDispatcherTest {
         try {
             HttpResponse response = dispatcher.dispatch();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
 
