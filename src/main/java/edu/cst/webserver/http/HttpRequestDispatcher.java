@@ -56,10 +56,11 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
                 } else {
 
                     String mime = MimeTypeDetector.detectMimeType(path.toString());
-                    int size = MimeTypeDetector.getContentLength(file);
+//                    int size = MimeTypeDetector.getContentLength(file);
                     response.setStatus(HttpStatus.Code.OK);
                     response.setHeader(HttpHeader.CONTENT_TYPE,mime);
-                    response.setHeader(HttpHeader.CONTENT_LENGTH,String.valueOf(size));
+//                    response.setHeader(HttpHeader.CONTENT_LENGTH,String.valueOf(size));
+
                     HttpRequestHandler<File> handler = new HttpRequestFileHandler(file,request,response);
 
 
