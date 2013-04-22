@@ -55,14 +55,13 @@ public class HttpHeaderFieldParser {
         return headers;
     }
 
-    public static List<Map<String, String>> parse_list(List<String> headers) throws HttpRequestException {
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-        for(int i =0; i<headers.size(); i++){
+    public static Map<String, String> parse_list(List<String> headers) throws HttpRequestException {
+        Map<String, String> result = new HashMap<String, String>();
+        for (int i = 0; i < headers.size(); i++) {
             String header = headers.get(i);
             Map<String, String> parsed = parse(header);
-            result.add(parsed);
+            result.putAll(parsed);
         }
-
         return result;
     }
 
