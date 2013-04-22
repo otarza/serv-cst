@@ -12,7 +12,7 @@ import java.util.Map;
 public class HttpRequestDispatcherTest {
 
     @Test
-    public void testDispatcher(){
+    public void testDispatcher() throws HttpRequestException {
 
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(HttpHeader.HOST,"www.example.com");

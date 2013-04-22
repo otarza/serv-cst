@@ -7,6 +7,7 @@ import sun.net.www.content.text.plain;
  */
 public enum HttpMime {
 
+    TEXT_HTML("text/html"),
     IMAGE_PNG("image/png"),
     IMAGE_JPEG("image/jpeg"),
     IMAGE_GIF("image/gif"),

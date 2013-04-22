@@ -1,5 +1,7 @@
 package edu.cst.webserver.http;
 
+import edu.cst.webserver.env.MimeTypeDetector;
+import edu.cst.webserver.env.ServerConfig;
 import edu.cst.webserver.http.handlers.HttpRequestDirectoryHandler;
 import edu.cst.webserver.http.handlers.HttpRequestFileHandler;
 import java.io.File;
@@ -28,22 +30,18 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
 
     @Override
     public void handle(HttpResponse response) throws HttpRequestException {
-
         throw new HttpRequestException(response.getStatusCode(),"Message");
-        //Generate Http response
-       /* HTTP/1.1 400 Bad Request
-        Content-Type: text/plain
-        Content-Length: ...
-
-        Something wrong happened!*/
     }
 
-    public HttpResponse dispatch() throws IOException {
+    public HttpResponse dispatch() throws IOException, HttpRequestException {
 
         if (file.exists() && file.canRead()) {
-            if (file.isDirectory()) {
+            ServerConfig config = ServerConfig.getInstance();
+            if (file.isDirectory() && config.isDirListingAllowed()) {
+                response.setStatus(HttpStatus.Code.OK);
+                response.setHeader(HttpHeader.CONTENT_TYPE,HttpMime.TEXT_HTML.getMime());
                 HttpRequestHandler<File> handler = new HttpRequestDirectoryHandler(file,request,response);
-               // handler.process();
+//                handler.process();
 
             } else if (file.isFile()) {
                 boolean isRegularExecutableFile = Files.isRegularFile(path) && Files.isReadable(path) && Files.isExecutable(path);
@@ -57,7 +55,13 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
 //           return new HttpRequestJavaHandler(file, request, response);
                 } else {
 
-                   HttpRequestHandler<File> handler = new HttpRequestFileHandler(file,request,response);
+                    String mime = MimeTypeDetector.detectMimeType(path.toString());
+                    int size = MimeTypeDetector.getContentLength(file);
+                    response.setStatus(HttpStatus.Code.OK);
+                    response.setHeader(HttpHeader.CONTENT_TYPE,mime);
+                    response.setHeader(HttpHeader.CONTENT_LENGTH,String.valueOf(size));
+                    HttpRequestHandler<File> handler = new HttpRequestFileHandler(file,request,response);
+
 
                     try {
                         handler.getContentType();
@@ -68,7 +72,11 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
 
                 }
             }
+        } else {
+            response.setStatus(HttpStatus.Code.NOT_FOUND);
+//            response.setHeader(HttpHeader.CONTENT_TYPE,HttpMime.TEXT_HTML.getMime());
         }
+//            throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,HttpStatus.Code.NOT_FOUND.getMessage());
 
 
 

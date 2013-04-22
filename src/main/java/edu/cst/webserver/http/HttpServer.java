@@ -33,8 +33,6 @@ public class HttpServer {
             int contentLength = 10;
             String line;
             List<String> httpMessage = new ArrayList<String>();
-            List<String> httpHeaders = new ArrayList<String>();
-            StringBuilder body = new StringBuilder();
             while ((line = bufferedReader.readLine()) != null) {
                 httpMessage.add(line);
 
@@ -53,15 +51,26 @@ public class HttpServer {
                     }
 
                     //for(int i = 1;i<)
+                    Map<String,String> headers = null;
+                    try {
+                        headers = HttpHeaderFieldParser.parse_list(httpMessage);
+                    } catch (HttpRequestException e) {
+                        e.printStackTrace();
+                    }
 
-//                    HttpHeaderFieldParser.parse_list(httpMessage);
 
-//                    HttpRequestLineParser
-
+                    HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
+                    HttpRequestLine requestLine = null;
+                    try {
+                        requestLine = parser.parse(httpMessage.get(0));
+                    } catch (HttpRequestException e) {
+                        e.printStackTrace();
+                    }
 //                    String body;
 
 
-                    HttpRequest request = new HttpRequestWrapper(null,null,"");
+
+                    HttpRequest request = new HttpRequestWrapper(requestLine,headers,"");
                     for (String messageLine : httpMessage) {
                         System.out.println(messageLine);
                     }
