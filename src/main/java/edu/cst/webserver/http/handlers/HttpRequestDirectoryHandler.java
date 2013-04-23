@@ -56,6 +56,5 @@ public class HttpRequestDirectoryHandler implements HttpRequestHandler{
         HttpDirFilesList v = new HttpDirFilesList(file);
         String list = v.getDirList();
         response.write(list);
-
     }
 }

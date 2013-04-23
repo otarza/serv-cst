@@ -1,7 +1,5 @@
 package edu.cst.webserver.http;
 
-import sun.net.www.content.text.plain;
-
 /**
  * @author Demur
  */
@@ -17,6 +15,7 @@ public enum HttpMime {
     APPLICATION_XML("application/xml"),
     CONTENT_UNKNOWN("content/unknown"),
     APPLICATION_OCTET_STREAM("application/octet-stream");
+
 
     private String mime;
 
