@@ -50,6 +50,8 @@ public class MimeTypeDetector {
                 mimeType = HttpMime.TEXT_JAVASCRIPT.getMime();
             }else if(fileName.endsWith(".css")) {
                 mimeType = HttpMime.TEXT_CSS.getMime();
+            }else if(fileName.endsWith(".ssjs")) {
+                mimeType = ".ssjs";
             } else {
                 mimeType = HttpMime.APPLICATION_OCTET_STREAM.getMime();
             }

@@ -47,13 +47,18 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
             } else if (file.isFile() && file.canRead()) {
                 boolean isRegularExecutableFile = Files.isRegularFile(path) && Files.isReadable(path) && Files.isExecutable(path);
                 if (isRegularExecutableFile) {
+                    try {
+                        if(MimeTypeDetector.detectMimeType(path.toString()).equals(".ssjs")){
+                            // aq server side javascript
+//           HttpRequestHandler<File> handler = new HttpRequestJavaScriptHandler(file, request, response);
+                        }
+                    } catch (HttpRequestException e) {
+                        e.printStackTrace();
+                    }
 
-
-                    // aq server side javascript
-//           return new HttpRequestJavaScriptHandler(file, request, response);
                     //java executable
 
-//           return new HttpRequestJavaHandler(file, request, response);
+//           new HttpRequestJavaHandler(file, request, response);
                 } else {
 
                     String mime = null;
@@ -68,7 +73,7 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
                     response.setStatus(HttpStatus.Code.OK);
                     response.setHeader(HttpHeader.CONTENT_TYPE,mime);
                     HttpRequestHandler<File> handler = new HttpRequestFileHandler(file,request,response);
-               }
+                }
             }
         } else {
             response.setStatus(HttpStatus.Code.NOT_FOUND);
