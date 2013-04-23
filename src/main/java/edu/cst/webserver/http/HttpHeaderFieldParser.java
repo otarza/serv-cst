@@ -55,7 +55,7 @@ public class HttpHeaderFieldParser {
         return headers;
     }
 
-    public static Map<String, String> parse_list(List<String> headers) throws HttpRequestException {
+    public static Map<String, String> parseList(List<String> headers) throws HttpRequestException {
         Map<String, String> result = new HashMap<String, String>();
         for (int i = 0; i < headers.size(); i++) {
             String header = headers.get(i);
