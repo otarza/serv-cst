@@ -32,6 +32,13 @@ public class MimeTypeDetector {
         return mime;
     }
 
+    public static int getContentLength(File file) throws IOException {
+        URL url = new URL("file", "", file.getPath());
+        URLConnection conn = url.openConnection();
+        int contentLength = conn.getContentLength();
+        return contentLength;
+    }
+
     private static String getMimeType(File file) throws IOException {
         URL url = new URL("file", "", file.getPath());
         URLConnection conn = url.openConnection();
@@ -49,5 +56,7 @@ public class MimeTypeDetector {
         }
         return mimeType;
     }
+
+
 
 }

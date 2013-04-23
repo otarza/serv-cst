@@ -1,12 +1,11 @@
 package edu.cst.webserver.http;
 
-import sun.net.www.content.text.plain;
-
 /**
  * @author Demur
  */
 public enum HttpMime {
 
+    TEXT_HTML("text/html"),
     IMAGE_PNG("image/png"),
     IMAGE_JPEG("image/jpeg"),
     IMAGE_GIF("image/gif"),
@@ -16,6 +15,7 @@ public enum HttpMime {
     APPLICATION_XML("application/xml"),
     CONTENT_UNKNOWN("content/unknown"),
     APPLICATION_OCTET_STREAM("application/octet-stream");
+
 
     private String mime;
 
