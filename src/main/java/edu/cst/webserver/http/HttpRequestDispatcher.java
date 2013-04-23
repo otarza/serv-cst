@@ -33,17 +33,18 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
         throw new HttpRequestException(response.getStatusCode(),"Message");
     }
 
-    public HttpResponse dispatch() throws IOException, HttpRequestException {
+    public HttpResponse dispatch() throws IOException {
 
-        if (file.exists() && file.canRead()) {
+        if (file.exists()) {
             ServerConfig config = ServerConfig.getInstance();
             if (file.isDirectory() && config.isDirListingAllowed()) {
                 response.setStatus(HttpStatus.Code.OK);
                 response.setHeader(HttpHeader.CONTENT_TYPE,HttpMime.TEXT_HTML.getMime());
-                HttpRequestHandler<File> handler = new HttpRequestDirectoryHandler(file,request,response);
-//                handler.process();
 
-            } else if (file.isFile()) {
+                HttpRequestHandler<File> handler = new HttpRequestDirectoryHandler(file,request,response);
+
+
+            } else if (file.isFile() && file.canRead()) {
                 boolean isRegularExecutableFile = Files.isRegularFile(path) && Files.isReadable(path) && Files.isExecutable(path);
                 if (isRegularExecutableFile) {
 
@@ -55,29 +56,23 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
 //           return new HttpRequestJavaHandler(file, request, response);
                 } else {
 
-                    String mime = MimeTypeDetector.detectMimeType(path.toString());
-//                    int size = MimeTypeDetector.getContentLength(file);
+                    String mime = null;
+                    try {
+                        mime = MimeTypeDetector.detectMimeType(path.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (HttpRequestException e) {
+
+                        e.printStackTrace();
+                    }
                     response.setStatus(HttpStatus.Code.OK);
                     response.setHeader(HttpHeader.CONTENT_TYPE,mime);
-//                    response.setHeader(HttpHeader.CONTENT_LENGTH,String.valueOf(size));
-
                     HttpRequestHandler<File> handler = new HttpRequestFileHandler(file,request,response);
-
-
-                    try {
-                        handler.getContentType();
-                    } catch (HttpRequestException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
-
-
-                }
+               }
             }
         } else {
             response.setStatus(HttpStatus.Code.NOT_FOUND);
-//            response.setHeader(HttpHeader.CONTENT_TYPE,HttpMime.TEXT_HTML.getMime());
         }
-//            throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,HttpStatus.Code.NOT_FOUND.getMessage());
 
 
 
