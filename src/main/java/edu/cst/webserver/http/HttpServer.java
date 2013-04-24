@@ -1,12 +1,14 @@
 package edu.cst.webserver.http;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HttpServer {
     static HttpResponse response;
@@ -23,6 +25,7 @@ public class HttpServer {
                 Socket socket = serverSocket.accept();
                 socket.setSoTimeout(10000);
                 process(socket);
+				socket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,77 +47,55 @@ public class HttpServer {
             ex.printStackTrace();
         }
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        int contentLength = 10;
-        String line;
-        List<String> httpMessage = new ArrayList<String>();
+        List<String> headerList = new ArrayList<String>();
+		HttpRequestLine requestLine = null;
+		String line;
 
-        //add request Line
         try {
             if((line = bufferedReader.readLine()) != null){
-                httpMessage.add(line);
+				HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
+				try {
+					requestLine = parser.parse(line);
+				} catch (HttpRequestException e) {
+					response.setStatus(HttpStatus.Code.BAD_REQUEST);
+					e.printStackTrace();
+				}
             }
         } catch (IOException e) {
-
             e.printStackTrace();
         }
-
-        HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-        HttpRequestLine requestLine = null;
-        try {
-            requestLine = parser.parse(httpMessage.get(0));
-        } catch (HttpRequestException e) {
-            response.setStatus(HttpStatus.Code.BAD_REQUEST);
-            e.printStackTrace();
-        }
-        //remove request Line from list
-        httpMessage.remove(0);
 
         //read all headers
         try {
             while ((line = bufferedReader.readLine()) != null) {
-                httpMessage.add(line);
-
                 if (line.length() == 0) {
-                    ByteArrayOutputStream entityBody = new ByteArrayOutputStream();
-
-                    try {
-                        byte[] remaining = new byte[contentLength];
-                        int read = inputStream.read(remaining);
-                        if (read > -1) {
-                            entityBody.write(remaining);
-                        }
-
-                    } catch (IOException e) {
-                        break;
-                    }
-
-                   /* //for(int i = 1;i<)
-                    Map<String,String> headers = null;
-                    try {
-                        headers = HttpHeaderFieldParser.parse_list(httpMessage);
-                    } catch (HttpRequestException e) {
-                        e.printStackTrace();
-                    }*/
-
-
-
-
-
-                    //                    String body;
-
-
-
-//                    HttpRequest request = new HttpRequestWrapper(requestLine,headers,"");
-                    for (String messageLine : httpMessage) {
-                        System.out.println(messageLine);
-                    }
-                    socket.close();
-                    return;
-                }
+					dump(socket, headerList);
+                    break;
+                } else {
+					headerList.add(line);
+				}
             }
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
-
     }
+
+	private static void dump(Socket socket, List<String> headers) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HTTP/1.1 200 OK");
+		builder.append("Content-Type: text/html");
+		builder.append("\r\n\r\n");
+
+		for (String messageLine : headers) {
+			System.out.println(messageLine);
+			builder.append(messageLine);
+			builder.append("\r\n");
+		}
+
+		try {
+			socket.getOutputStream().write(builder.toString().getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
