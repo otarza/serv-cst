@@ -33,12 +33,12 @@ public class HttpRequestDispatcherTest {
         }
 
 
-        HttpRequestDispatcher dispatcher = new HttpRequestDispatcher(request);
+      /*  HttpRequestDispatcher dispatcher = new HttpRequestDispatcher(request);
         try {
             HttpResponse response = dispatcher.dispatch();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
     }

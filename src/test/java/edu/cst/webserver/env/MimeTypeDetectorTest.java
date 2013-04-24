@@ -5,6 +5,7 @@ import edu.cst.webserver.http.HttpRequestException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -12,7 +13,7 @@ import java.io.IOException;
  */
 public class MimeTypeDetectorTest {
     private String getMimeType(String path) throws IOException, HttpRequestException {
-        return MimeTypeDetector.detectMimeType(path);
+        return MimeTypeDetector.getMimeType(new File(path));
     }
 
     /**

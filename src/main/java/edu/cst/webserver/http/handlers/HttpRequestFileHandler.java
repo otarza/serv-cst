@@ -1,10 +1,7 @@
 package edu.cst.webserver.http.handlers;
 
 import edu.cst.webserver.env.MimeTypeDetector;
-import edu.cst.webserver.http.HttpRequest;
-import edu.cst.webserver.http.HttpRequestException;
-import edu.cst.webserver.http.HttpRequestHandler;
-import edu.cst.webserver.http.HttpResponse;
+import edu.cst.webserver.http.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,16 +15,14 @@ import java.text.SimpleDateFormat;
 /**
  * @author Demur
  */
-public class HttpRequestFileHandler implements HttpRequestHandler {
+public class HttpRequestFileHandler implements HttpRequestHandler<File> {
 
     HttpRequest request;
     HttpResponse response;
     File file;
     BasicFileAttributes attributes;
 
-    public HttpRequestFileHandler(File file, HttpRequest request,HttpResponse response) throws IOException {
-        this.request = request;
-        this.response = response;
+    public HttpRequestFileHandler(File file) throws IOException {
         this.file = file;
         attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
     }
@@ -39,7 +34,7 @@ public class HttpRequestFileHandler implements HttpRequestHandler {
 
     @Override
     public String getContentType() throws IOException, HttpRequestException {
-        return MimeTypeDetector.detectMimeType(file.toString());
+        return MimeTypeDetector.getMimeType(file);
     }
 
     @Override
@@ -54,7 +49,14 @@ public class HttpRequestFileHandler implements HttpRequestHandler {
     }
 
     @Override
-    public void process(Object handle, HttpRequest request, HttpResponse response) throws HttpRequestException {
-
+    public void process(File handle, HttpRequest request, HttpResponse response) throws HttpRequestException {
+        this.file = file;
+        try {
+            response.setHeader(HttpHeader.CONTENT_TYPE, getContentType());
+//            response.setHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(getContentLength()));
+            response.write(new FileInputStream(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

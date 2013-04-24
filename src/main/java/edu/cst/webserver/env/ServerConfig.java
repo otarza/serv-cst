@@ -75,6 +75,9 @@ public class ServerConfig{
         return defaultFiles.contains(file);
     }
 
+    public Set<String> getDefaultFiles(){
+        return this.defaultFiles;
+    }
     /**
      * @author Rezo
      * @param httpVersion

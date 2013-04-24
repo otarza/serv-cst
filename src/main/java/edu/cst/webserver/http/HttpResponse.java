@@ -1,6 +1,7 @@
 package edu.cst.webserver.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -14,6 +15,7 @@ public interface HttpResponse {
      */
     public void setHeader(String name, String value);
 
+    public void setHeaders(Map<String, String> headers);
     /**
      * Sets status code for the response
      * @param status
@@ -51,6 +53,8 @@ public interface HttpResponse {
      * @param content
      */
     public void write(String content) throws IOException;
+
+    public void write(InputStream inputStream) throws IOException;
 
     /**
      * Immediately flushes underlying OutputStream

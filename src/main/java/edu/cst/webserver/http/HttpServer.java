@@ -9,12 +9,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HttpServer {
-    static HttpResponse response;
-    HttpServer(){
-        response = new HttpResponseWrapper();
-    }
+
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
 
@@ -33,69 +31,82 @@ public class HttpServer {
     }
 
     private static void process(Socket socket) {
+        HttpResponse response = null;
+        HttpRequest request = null;
+        try {
+            response = new HttpResponseWrapper(socket.getOutputStream());
 
-        InputStream inputStream = null;
-        try {
-            inputStream = socket.getInputStream();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        InputStreamReader inputStreamReader = null;
-        try {
-            inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
-        }
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        List<String> headerList = new ArrayList<String>();
-		HttpRequestLine requestLine = null;
-		String line;
-
-        try {
-            if((line = bufferedReader.readLine()) != null){
-				HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
-				try {
-					requestLine = parser.parse(line);
-				} catch (HttpRequestException e) {
-					response.setStatus(HttpStatus.Code.BAD_REQUEST);
-					e.printStackTrace();
-				}
+            InputStream inputStream = null;
+            try {
+                inputStream = socket.getInputStream();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            InputStreamReader inputStreamReader = null;
+            try {
+                inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                ex.printStackTrace();
+            }
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            List<String> headerList = new ArrayList<String>();
+            HttpRequestLine requestLine = null;
+            String line;
 
-        //read all headers
-        try {
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.length() == 0) {
-					dump(socket, headerList);
-                    break;
-                } else {
-					headerList.add(line);
-				}
+            try {
+                if((line = bufferedReader.readLine()) != null){
+                    HttpRequestLineParser parser = HttpRequestLineParser.newInstance();
+                    try {
+                        requestLine = parser.parse(line);
+                    } catch (HttpRequestException e) {
+                        response.setStatus(HttpStatus.Code.BAD_REQUEST);
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //read all headers
+            try {
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (line.length() == 0) {
+                        Map<String, String> headers = HttpHeaderFieldParser.parseList(headerList);
+                        response.setHeaders(headers);
+                        request = new HttpRequestWrapper(requestLine, headers, null);
+                        HttpRequestDispatcher dispatcher = new HttpRequestDispatcher(request, response);
+                        dispatcher.dispatch();
+                        dump(response);
+                        break;
+                    } else {
+                        headerList.add(line);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (HttpRequestException e) {
+                e.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-	private static void dump(Socket socket, List<String> headers) {
+	private static void dump(HttpResponse response) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("HTTP/1.1 200 OK");
-		builder.append("Content-Type: text/html");
-		builder.append("\r\n\r\n");
 
-		for (String messageLine : headers) {
-			System.out.println(messageLine);
-			builder.append(messageLine);
+        for (Map.Entry<String, String> header : response.getHeaders().entrySet()) {
+			builder.append(header.getKey());
+            builder.append(":");
+            builder.append(header.getValue());
 			builder.append("\r\n");
 		}
 
-		try {
-			socket.getOutputStream().write(builder.toString().getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            response.write(builder.toString());
+            response.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

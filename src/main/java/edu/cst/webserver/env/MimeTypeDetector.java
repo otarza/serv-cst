@@ -16,30 +16,13 @@ import java.net.URLConnection;
  * @author Demur
  */
 public class MimeTypeDetector {
-
-    public static String detectMimeType(String filePath) throws IOException, HttpRequestException {
-        File file = new File(filePath);
-        String mime = "";
-        if(file.exists()) {
-            if(file.isFile()) {
-                mime = getMimeType(file);
-            } else if( file.isDirectory()) {
-                throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File not Found, Directory Located!");
-            }
-        } else {
-            throw new HttpRequestException(HttpStatus.Code.NOT_FOUND,"File Not Found!");
-        }
-        return mime;
-    }
-
     public static int getContentLength(File file) throws IOException {
         URL url = new URL("file", "", file.getPath());
         URLConnection conn = url.openConnection();
-        int contentLength = conn.getContentLength();
-        return contentLength;
+        return conn.getContentLength();
     }
 
-    private static String getMimeType(File file) throws IOException {
+    public static String getMimeType(File file) throws IOException {
         URL url = new URL("file", "", file.getPath());
         URLConnection conn = url.openConnection();
         String mimeType = conn.getContentType();
@@ -58,7 +41,4 @@ public class MimeTypeDetector {
         }
         return mimeType;
     }
-
-
-
 }
