@@ -35,10 +35,16 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
         File file = Resource.newInstance().resolvePath(request.getPath());
         if (file.exists() && file.canRead()) {
             if (file.isFile()) {
-
                 HttpRequestFileHandler fileHandler = new HttpRequestFileHandler(file);
                 try {
                     fileHandler.process(file, request, response);
+                } catch (HttpRequestException e) {
+                    e.printStackTrace();
+                }
+            } else if (file.isDirectory()) {
+                HttpRequestDirectoryHandler directoryHandler = new HttpRequestDirectoryHandler(file);
+                try {
+                    directoryHandler.process(file, request, response);
                 } catch (HttpRequestException e) {
                     e.printStackTrace();
                 }
