@@ -9,41 +9,43 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * @author OtarZ
  */
-public class HttpRequestJavaScriptHandler implements HttpRequestHandler {
+public class HttpRequestJavaScriptHandler implements HttpRequestHandler<File> {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public String getContentType() throws IOException, HttpRequestException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public int getContentLength() throws IOException {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public String getLastModified() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
-    public void process(Object handle, HttpRequest request, HttpResponse response) throws HttpRequestException, IOException {
+    public void process(File handle, HttpRequest request, HttpResponse response) throws HttpRequestException, IOException {
         ScriptEngineManager factory = new ScriptEngineManager();
         ScriptEngine engine = factory.getEngineByName("JavaScript");
         try {
-            double output = (Double) engine.eval("var date = new Date(); date.getHours();");
-            System.out.println(output);
+			engine.put("request", request);
+			engine.put("response", response);
+            engine.eval(new FileReader(handle));
         } catch (ScriptException e) {
             e.printStackTrace();
         }
