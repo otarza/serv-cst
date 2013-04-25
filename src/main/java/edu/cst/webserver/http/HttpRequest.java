@@ -1,11 +1,7 @@
 package edu.cst.webserver.http;
 
 /**
- * Created with IntelliJ IDEA.
  * User: vaxop
- * Date: 3/7/13
- * Time: 7:40 AM
- * To change this template use File | Settings | File Templates.
  */
 import java.util.Map;
 
