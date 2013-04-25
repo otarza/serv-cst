@@ -91,8 +91,9 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
-    public void write(String content){
+    public void write(String content) throws IOException {
         messageBody.append(content);
+        flush();
     }
 
     @Override

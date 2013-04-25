@@ -23,7 +23,7 @@ public class HttpServer {
                 Socket socket = serverSocket.accept();
                 socket.setSoTimeout(10000);
                 process(socket);
-				socket.close();
+                socket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,15 +92,15 @@ public class HttpServer {
         }
     }
 
-	private static void dump(HttpResponse response) {
-		StringBuilder builder = new StringBuilder();
+    private static void dump(HttpResponse response) {
+        StringBuilder builder = new StringBuilder();
 
         for (Map.Entry<String, String> header : response.getHeaders().entrySet()) {
-			builder.append(header.getKey());
+            builder.append(header.getKey());
             builder.append(":");
             builder.append(header.getValue());
-			builder.append("\r\n");
-		}
+            builder.append("\r\n");
+        }
 
         try {
             response.write(builder.toString());

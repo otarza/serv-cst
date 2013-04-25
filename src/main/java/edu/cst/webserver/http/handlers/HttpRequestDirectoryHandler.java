@@ -17,15 +17,13 @@ import java.text.SimpleDateFormat;
 /**
  * @author Demur
  */
-public class HttpRequestDirectoryHandler implements HttpRequestHandler{
+public class HttpRequestDirectoryHandler implements HttpRequestHandler<File>{
 
     HttpRequest request;
     HttpResponse response;
     File file;
     BasicFileAttributes attributes;
-    public HttpRequestDirectoryHandler(File file, HttpRequest request,HttpResponse response) throws IOException {
-        this.request = request;
-        this.response = response;
+    public HttpRequestDirectoryHandler(File file) throws IOException {
         this.file = file;
         attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
     }
@@ -52,7 +50,10 @@ public class HttpRequestDirectoryHandler implements HttpRequestHandler{
     }
 
     @Override
-    public void process(Object handle, HttpRequest request, HttpResponse response) throws HttpRequestException, IOException {
+    public void process(File handle, HttpRequest request, HttpResponse response) throws HttpRequestException, IOException {
+        response.setHeader(HttpHeader.CONTENT_TYPE, HttpMime.TEXT_HTML.getMime());
+
+
         HttpDirFilesList v = new HttpDirFilesList(file);
         String list = v.getDirList();
         response.write(list);

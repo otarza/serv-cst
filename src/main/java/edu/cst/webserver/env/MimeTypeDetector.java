@@ -1,14 +1,9 @@
 package edu.cst.webserver.env;
 
-import edu.cst.webserver.http.HttpHeader;
 import edu.cst.webserver.http.HttpMime;
-import edu.cst.webserver.http.HttpRequestException;
-import edu.cst.webserver.http.HttpStatus;
 
-import javax.activation.MimetypesFileTypeMap;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
