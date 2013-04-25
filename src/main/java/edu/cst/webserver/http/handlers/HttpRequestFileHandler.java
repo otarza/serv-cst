@@ -50,10 +50,9 @@ public class HttpRequestFileHandler implements HttpRequestHandler<File> {
 
     @Override
     public void process(File handle, HttpRequest request, HttpResponse response) throws HttpRequestException {
-        this.file = file;
         try {
             response.setHeader(HttpHeader.CONTENT_TYPE, getContentType());
-//            response.setHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(getContentLength()));
+			response.setHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(getContentLength()));
             response.write(new FileInputStream(file));
         } catch (IOException e) {
             e.printStackTrace();

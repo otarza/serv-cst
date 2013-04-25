@@ -16,7 +16,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private static final String STATUS_LINE = "HTTP/1.1 %d %s\r\n";
     private static final String HEADER_LINE = "%s: %s\r\n";
-    private static final String SEPARATOR = "\r\n\r\n";
+    private static final String SEPARATOR = "\r\n";
 
     private HttpStatus.Code statusCode;
     private Map<String,String> headers;
@@ -128,10 +128,9 @@ public class HttpResponseWrapper implements HttpResponse {
             byte[] buffer = new byte[1024];
             int bytesRead;
             while((bytesRead = inputStream.read(buffer)) != -1) {
-                byte[] temp = new byte[bytesRead];
-                System.arraycopy(buffer, 0, temp, 0, bytesRead);
-                outputStream.write(temp);
+                outputStream.write(buffer, 0, bytesRead);
             }
+			outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
