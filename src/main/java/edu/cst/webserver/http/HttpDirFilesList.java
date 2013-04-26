@@ -3,6 +3,8 @@ package edu.cst.webserver.http;
 import edu.cst.webserver.uri.Resource;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * User: vaxop
@@ -16,6 +18,7 @@ public class HttpDirFilesList {
 
     public String getDirList() {
         File[] fileItems = file.listFiles();
+        
         String basePath = file.getName();
         StringBuilder builder = new StringBuilder();
         builder.append("<ul>");
