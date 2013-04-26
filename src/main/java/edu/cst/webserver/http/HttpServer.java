@@ -21,7 +21,7 @@ public class HttpServer {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                socket.setSoTimeout(60000);
+                socket.setSoTimeout(10000);
                 process(socket);
                 socket.close();
             }
