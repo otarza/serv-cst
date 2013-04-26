@@ -24,7 +24,7 @@ public class HttpRequestFileHandler implements HttpRequestHandler<File> {
 
     public HttpRequestFileHandler(File file) throws IOException {
         this.file = file;
-        attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+        this.attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
     }
 
     @Override
