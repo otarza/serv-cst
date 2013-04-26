@@ -15,22 +15,20 @@ public class HttpDirFilesList {
     }
 
     public String getDirList() {
-        File[] item = file.listFiles();
-        String absolutePath = file.getAbsolutePath();
+        File[] fileItems = file.listFiles();
+        String basePath = file.getName();
         StringBuilder builder = new StringBuilder();
-        File f1 = Resource.newInstance().resolvePath(file.getPath());
-        String pp = f1.getPath();
         builder.append("<ul>");
-        for (File f : item) {
+        for (File file : fileItems) {
             builder.append("<li><a href=\"");
-            builder.append(f1.getPath());
+            builder.append(basePath);
             builder.append("\\");
-            builder.append(f.getName());
+            builder.append(file.getName());
             builder.append("\" >");
-            if (f.isDirectory()) {
+            if (file.isDirectory()) {
                 builder.append("/");
             }
-            builder.append(f.getName());
+            builder.append(file.getName());
             builder.append("</a></li>");
         }
         builder.append("</ul>");
