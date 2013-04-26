@@ -54,7 +54,7 @@ public class HttpRequestDirectoryHandler implements HttpRequestHandler<File>{
         response.setHeader(HttpHeader.CONTENT_TYPE, HttpMime.TEXT_HTML.getMime());
 
 
-        HttpDirFilesList v = new HttpDirFilesList(file,request,response);
+        HttpDirFilesList v = new HttpDirFilesList(file);
         String list = v.getDirList();
         response.write(list);
     }

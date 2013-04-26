@@ -1,8 +1,12 @@
 package edu.cst.webserver.http;
 
+import edu.cst.webserver.env.MimeTypeDetector;
 import edu.cst.webserver.uri.Resource;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -10,15 +14,36 @@ import java.util.Comparator;
  * User: vaxop
  */
 public class HttpDirFilesList {
-    File file;
+    private File file;
+    private BasicFileAttributes attributes;
 
-    public HttpDirFilesList(File file) {
+    public HttpDirFilesList(File file) throws IOException {
         this.file = file;
+        this.attributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
     }
 
-    public String getDirList() {
+    public String getDirList() throws IOException {
         File[] fileItems = file.listFiles();
-        
+
+        Comparator comp = new Comparator() {
+            public int compare(Object o1, Object o2) {
+                File f1 = (File) o1;
+                File f2 = (File) o2;
+                if (f1.isDirectory() && !f2.isDirectory()) {
+                    // Directory before non-directory
+                    return -1;
+                } else if (!f1.isDirectory() && f2.isDirectory()) {
+                    // Non-directory after directory
+                    return 1;
+                } else {
+                    // Alphabetic order otherwise
+                    return ((File) o1).compareTo((File) o2);
+                }
+            }
+        };
+        Arrays.sort(fileItems, comp);
+
+
         String basePath = file.getName();
         StringBuilder builder = new StringBuilder();
 
@@ -36,7 +61,7 @@ public class HttpDirFilesList {
         builder.append("</head>");
         builder.append("<body>");
         builder.append("<header id=\"head\">");
-        builder.append("<h1>Index of C:\\server\\build\\node_modules\\</h1>");
+        builder.append("<h1>Index of "+ file.getPath() +"</h1>");
         builder.append("</header>");
         builder.append("<table width=\"500\">");
         builder.append("<tr id=\"titles\">");
@@ -61,8 +86,8 @@ public class HttpDirFilesList {
             }
             builder.append(file.getName());
             builder.append("</a></td>");
-            builder.append("<td>3 KB</td>");
-            builder.append("<td>12/21/12</td>");
+            builder.append("<td>" + MimeTypeDetector.getContentLength(file) / Double.valueOf("1024") + "</td>");
+            builder.append("<td>" + attributes.lastModifiedTime() + "</td>");
             builder.append("</tr>");
         }
 
