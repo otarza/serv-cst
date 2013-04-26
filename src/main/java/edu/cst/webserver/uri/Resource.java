@@ -15,7 +15,9 @@ public class Resource {
         String docRoot = serverConfig.getDocumentRoot();
 
         if (resourcePath.equals("/")) {
-            resourcePath = docRoot + resourcePath;
+            if(!resourcePath.startsWith(docRoot)){
+                resourcePath = docRoot + resourcePath;
+            }
             for (String defaultFile : serverConfig.getDefaultFiles()){
                 path = Paths.get(resourcePath + defaultFile);
                 File file = path.toFile();
@@ -24,7 +26,9 @@ public class Resource {
                 }
             }
         } else {
-            resourcePath = docRoot + resourcePath;
+            if(!resourcePath.startsWith(docRoot)){
+                resourcePath = docRoot + resourcePath;
+            }
             path = Paths.get(resourcePath);
         }
         return path == null ? null : path.toFile();

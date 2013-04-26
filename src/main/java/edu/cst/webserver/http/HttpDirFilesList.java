@@ -1,5 +1,7 @@
 package edu.cst.webserver.http;
 
+import edu.cst.webserver.uri.Resource;
+
 import java.io.File;
 
 /**
@@ -16,10 +18,12 @@ public class HttpDirFilesList {
         File[] item = file.listFiles();
         String absolutePath = file.getAbsolutePath();
         StringBuilder builder = new StringBuilder();
+        File f1 = Resource.newInstance().resolvePath(file.getPath());
+        String pp = f1.getPath();
         builder.append("<ul>");
         for (File f : item) {
             builder.append("<li><a href=\"");
-            builder.append(absolutePath);
+            builder.append(f1.getPath());
             builder.append("\\");
             builder.append(f.getName());
             builder.append("\" >");

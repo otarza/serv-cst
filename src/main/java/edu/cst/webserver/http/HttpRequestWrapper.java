@@ -59,7 +59,6 @@ public class HttpRequestWrapper implements HttpRequest{
 
     @Override
     public Map<String, String> getParams() {
-
        return queryParams;
     }
 
