@@ -102,7 +102,7 @@ public class HttpDirFilesList {
                 builder.append("<a href=\"");
 
                 String src = file.getPath();
-                builder.append(src.substring(9));
+                builder.append(src.substring(ServerConfig.getInstance().getDocumentRoot().length()));
                 builder.append("\">");
                 builder.append("/");
             }
@@ -123,8 +123,8 @@ public class HttpDirFilesList {
 
     public double getSize() throws IOException {
         DecimalFormat doubleFormat = new DecimalFormat("#.##");
-        return Double.valueOf(doubleFormat.format(MimeTypeDetector.getContentLength(file) / Double.valueOf("1024")));
-      //  double size = MimeTypeDetector.getContentLength(this.file);
-      //  return size;
+      //  return Double.valueOf(doubleFormat.format(MimeTypeDetector.getContentLength(file) / Double.valueOf("1024")));
+        double size = MimeTypeDetector.getContentLength(this.file);
+        return size;
     }
 }
