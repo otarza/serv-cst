@@ -104,12 +104,16 @@ public class HttpDirFilesList {
                 String src = file.getPath();
                 builder.append(src.substring(ServerConfig.getInstance().getDocumentRoot().length()));
                 builder.append("\">");
-                builder.append("/");
             }
             builder.append(file.getName());
             builder.append("</a></td>");
-            builder.append("<td>" + getSize() + " KB </td>");
-            builder.append("<td>" + attributes.lastModifiedTime() + "</td>");
+            if(!file.isDirectory()){
+                builder.append("<td>" + getSize(file) + " KB </td>");
+                builder.append("<td>" + attributes.lastModifiedTime() + "</td>");
+            }else {
+                builder.append("<td>" + "      " + "  </td>");
+                builder.append("<td>" + attributes.lastModifiedTime() + "</td>");
+            }
             builder.append("</tr>");
         }
 
@@ -121,10 +125,8 @@ public class HttpDirFilesList {
         return builder.toString();
     }
 
-    public double getSize() throws IOException {
+    public double getSize(File file) throws IOException {
         DecimalFormat doubleFormat = new DecimalFormat("#.##");
-      //  return Double.valueOf(doubleFormat.format(MimeTypeDetector.getContentLength(file) / Double.valueOf("1024")));
-        double size = MimeTypeDetector.getContentLength(this.file);
-        return size;
+        return Double.valueOf(doubleFormat.format(MimeTypeDetector.getContentLength(file) / Double.valueOf("1024")));
     }
 }
