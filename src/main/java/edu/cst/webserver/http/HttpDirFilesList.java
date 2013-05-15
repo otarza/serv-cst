@@ -91,7 +91,7 @@ public class HttpDirFilesList {
                 builder.append("<a href=\"");
 
                 String src = file.getPath();
-                builder.append(src.substring(9));
+                builder.append(src.substring(ServerConfig.getInstance().getDocumentRoot().length()));
                 if (file.isDirectory()) {
                     builder.append("/");
                 }
