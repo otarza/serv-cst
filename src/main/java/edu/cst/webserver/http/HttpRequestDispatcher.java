@@ -1,5 +1,6 @@
 package edu.cst.webserver.http;
 
+import edu.cst.webserver.env.ServerConfig;
 import edu.cst.webserver.http.handlers.HttpRequestDirectoryHandler;
 import edu.cst.webserver.http.handlers.HttpRequestFileHandler;
 import edu.cst.webserver.http.handlers.HttpRequestJavaScriptHandler;
@@ -42,7 +43,7 @@ public class HttpRequestDispatcher implements HttpResponseErrorHandler{
                 } catch (HttpRequestException e) {
                     e.printStackTrace();
                 }
-            } else if (file.isDirectory()) {
+            } else if (file.isDirectory() && ServerConfig.getInstance().isDirListingAllowed()) {
                 HttpRequestDirectoryHandler directoryHandler = new HttpRequestDirectoryHandler(file);
                 try {
                     directoryHandler.process(file, request, response);
