@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +68,13 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
+    public void setStatus(int status) throws IllegalAccessException {
+        this.statusCode = HttpStatus.getStatusByCode(status);
+    }
+
+    @Override
     public void redirect(String location) {
+//        this.statusCode = HttpStatus.Code.MOVED_PERMANENTLY;
         this.headers.put(HttpHeader.LOCATION, location);
     }
 

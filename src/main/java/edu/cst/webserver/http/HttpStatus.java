@@ -1,5 +1,7 @@
 package edu.cst.webserver.http;
 
+import java.lang.reflect.Field;
+
 //User: vaxop
 public class HttpStatus {
     public final static int CONTINUE_100 = 100;
@@ -58,7 +60,6 @@ public class HttpStatus {
     public final static int LOOP_DETECTED_508 = 508;
     public final static int NOT_EXTENDED_510 = 510;
     public final static int NETWORK_AUTHENTICATION_REQUIRED_511 = 511;
-
 
     public static enum Code {
         CONTINUE(CONTINUE_100, "Continue"),
@@ -131,6 +132,15 @@ public class HttpStatus {
         public String getMessage() {
             return this.message;
         }
+
     }
 
+    public static HttpStatus.Code getStatusByCode(int statusCode) {
+        for (Code code : Code.values()) {
+            if(code.getCode() == statusCode){
+                return code;
+            }
+        }
+        return  null;
+    }
 }

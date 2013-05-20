@@ -15,12 +15,23 @@ public interface HttpResponse {
      */
     public void setHeader(String name, String value);
 
+    /**
+     * Sets response header with a givean name and value
+     * @param headers
+     */
     public void setHeaders(Map<String, String> headers);
+
     /**
      * Sets status code for the response
      * @param status
      */
     public void setStatus(HttpStatus.Code status);
+
+    /**
+     * Sets status code for the response
+     * @param status
+     */
+    public void setStatus(int status) throws IllegalAccessException;
 
     /**
      * Sends a temporary redirect response with 307 HTTP status code

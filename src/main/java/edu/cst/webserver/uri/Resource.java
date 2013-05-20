@@ -18,7 +18,7 @@ public class Resource {
             if(!resourcePath.startsWith(docRoot)){
                 resourcePath = docRoot + resourcePath;
             }
-            for (String defaultFile : serverConfig.getDefaultFiles()){
+                for (String defaultFile : serverConfig.getDefaultFiles()){
                 path = Paths.get(resourcePath + defaultFile);
                 File file = path.toFile();
                 if (file.exists()) {
