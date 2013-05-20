@@ -71,4 +71,8 @@ public class HttpRequestLine {
         this.httpVersion = httpVersion;
     }
 
+    @Override
+    public String toString() {
+        return getMethod() + " " + getPath() + " " +getHttpVersion();
+    }
 }

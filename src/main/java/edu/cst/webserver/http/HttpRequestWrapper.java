@@ -28,8 +28,8 @@ public class HttpRequestWrapper implements HttpRequest{
     }
 
     @Override
-    public HttpRequestLine getHttpRequestLine() {
-        return requestLine;
+    public String getHttpRequestLine() {
+        return requestLine.toString();
     }
 
     @Override
@@ -54,7 +54,10 @@ public class HttpRequestWrapper implements HttpRequest{
 
     @Override
     public String getContentType() {
-        return  headers.get(HttpHeader.CONTENT_TYPE);
+        String header = headers.get(HttpHeader.CONTENT_TYPE);
+        if(header == null){
+           return "NULL";
+        }else return   header ;
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface HttpRequest {
     /**
      * Returns parsed HTTP Request Line object
      */
-    public HttpRequestLine getHttpRequestLine();
+    public String getHttpRequestLine();
 
     /**
      * Returns request URI in a full form,
