@@ -76,7 +76,7 @@ public class HttpServer {
                         request = new HttpRequestWrapper(requestLine, headers, null);
                         HttpRequestDispatcher dispatcher = new HttpRequestDispatcher(request, response);
                         dispatcher.dispatch();
-						response.flush();
+                        response.flush();
                         break;
                     } else {
                         headerList.add(line);

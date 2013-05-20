@@ -137,7 +137,7 @@ public class HttpResponseWrapper implements HttpResponse {
             while((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
             }
-			outputStream.close();
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

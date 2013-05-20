@@ -35,7 +35,7 @@ public class HttpRequestDirectoryHandler implements HttpRequestHandler<File>{
 
     @Override
     public String getContentType() throws IOException, HttpRequestException {
-      return MimeTypeDetector.getMimeType(file);
+        return MimeTypeDetector.getMimeType(file);
     }
 
     @Override
