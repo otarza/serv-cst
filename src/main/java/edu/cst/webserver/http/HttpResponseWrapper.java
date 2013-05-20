@@ -74,14 +74,20 @@ public class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public void redirect(String location) {
-//        this.statusCode = HttpStatus.Code.MOVED_PERMANENTLY;
         this.headers.put(HttpHeader.LOCATION, location);
     }
 
     @Override
     public void redirect(String location, HttpStatus.Code redirectStatus) {
-        this.headers.put(HttpHeader.LOCATION, location);
         this.statusCode = redirectStatus;
+        this.headers.put(HttpHeader.LOCATION, location);
+
+    }
+
+    @Override
+    public void redirect(String location,int redirectStatus) {
+        this.statusCode = HttpStatus.getStatusByCode(redirectStatus);
+        this.headers.put(HttpHeader.LOCATION, location);
     }
 
     @Override

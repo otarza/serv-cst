@@ -47,6 +47,13 @@ public interface HttpResponse {
     public void redirect(String location, HttpStatus.Code redirectStatus);
 
     /**
+     * Sends redirect response with specified redirect status code
+     * @param location
+     * @param redirectStatus
+     */
+    public void redirect(String location, int redirectStatus);
+
+    /**
      * Sends error response with specified error code
      * @param errorStatus
      */
