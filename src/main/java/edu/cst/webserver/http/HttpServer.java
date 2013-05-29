@@ -1,10 +1,8 @@
 package edu.cst.webserver.http;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import edu.cst.webserver.env.ServerConfig;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -15,9 +13,10 @@ public class HttpServer {
 
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
-
+        ServerConfig serverConfig;
         try {
-            serverSocket = new ServerSocket(9191);
+            serverConfig = ServerConfig.getInstance();
+            serverSocket = new ServerSocket(serverConfig.getServerPort());
 
             while (true) {
                 Socket socket = serverSocket.accept();

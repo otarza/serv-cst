@@ -19,6 +19,7 @@ public class ServerConfig{
     private Set<String> defaultFiles;
     private boolean allowListing;
     private String documentRoot;
+    private int serverPort;
 
     private ServerConfig(){
         properties = new Properties();
@@ -50,6 +51,7 @@ public class ServerConfig{
         defaultFiles = commaSeparatedStringToSet(properties.getProperty("directory.defaultFiles"));
         allowListing = Boolean.valueOf(properties.getProperty("directory.allowListing"));
         documentRoot = properties.getProperty("document.root");
+        serverPort = Integer.parseInt(properties.getProperty("server.port"));
     }
 
     private HashSet<String> commaSeparatedStringToSet(String input){
@@ -78,6 +80,11 @@ public class ServerConfig{
     public Set<String> getDefaultFiles(){
         return this.defaultFiles;
     }
+
+    public int getServerPort(){
+        return this.serverPort;
+    }
+
     /**
      * @author Rezo
      * @param httpVersion
